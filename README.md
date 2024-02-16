@@ -15,7 +15,7 @@ Before you begin, ensure that you have the following software installed on your 
 Follow these steps to set up your development environment:
 
 1. **Clone the Repository:**
-git clone https://github.com/thecodephilic-guy/luxswipe-front
+git clone https://github.com/Swipe-industries/luxswipe-front
 
 2. **Navigate to the Project Directory:**
 cd project-directory
