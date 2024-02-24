@@ -1,0 +1,23 @@
+.vertical-marquee {
+    height: 50px; /* Set height of the marquee container */
+    overflow: hidden;
+    position: relative;
+    margin-top: -0px;
+  }
+  
+  .animate-marquee {
+    position: absolute;
+    top: 0;
+    animation: marquee 10s linear infinite;
+  }
+  
+  @keyframes marquee {
+    0% { transform: translateY(0%); }
+  100% { transform: translateY(-50%); }
+  }
+  
+  .marquee-item {
+    display: block;
+    white-space: nowrap;
+  }
+  

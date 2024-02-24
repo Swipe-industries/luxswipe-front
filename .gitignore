@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*test.js
+*Test.jsx
+*authTest.jsx
+*firebase.js

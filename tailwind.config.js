@@ -8,6 +8,7 @@ export default {
     extend: {
       colors: {
         'patriarch': '#6A0171',
+        'patriarch-dim': '#5D0063',
         'tiffany-blue': '#04AFBC',
         'mystic': '#D64E86',
         'base-1': '#000000',
