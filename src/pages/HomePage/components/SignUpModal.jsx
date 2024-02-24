@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import googleIcon from "../assets/Google.svg";
+import googleIcon from "../assets/google.svg";
 import Eye from "../../../reUseComponets/Eye";
 import InputField from "../../../reUseComponets/InputField";
 import OutlineBtn from "../../../reUseComponets/OutlineBtn";
