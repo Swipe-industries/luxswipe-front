@@ -3,7 +3,7 @@ import React from 'react'
 function StartBtn({label}) {
   return (
     <div>
-      <button className='text-white bg-[#6A0171] font-poppins md:px-5 px-4 md:py-3 py-2 md:text-2xl text-[20px] rounded-[25px] ' >
+      <button className='text-contrast-3 bg-patriarch hover:bg-patriarch-dim font-poppins md:px-5 px-4 md:py-3 py-2 md:text-xl text-sm rounded-3xl' >
         {label}
         </button>
     </div>
