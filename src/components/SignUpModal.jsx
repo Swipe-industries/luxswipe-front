@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import googleIcon from "../assets/google.svg";
 import Eye from "./ui/Eye";
 import InputField from "./ui/InputField";
-import OutlineBtn from "./ui/OutlineBtn";
 
 function SignUpModal(props) {
   const { onClose } = props;
