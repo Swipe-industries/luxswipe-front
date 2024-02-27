@@ -12,14 +12,10 @@ import facebook from "../assets/facebook.svg";
 function Footer() {
   return (
     <>
-      <div className=" flex flex-col mt-10  bg-contrast-1 bg-opacity-25 shadow-sm justify-start items-center">
+      <div id="footer" className="flex flex-col mt-10 bg-contrast-1 bg-opacity-25 shadow-sm justify-center items-center w-full md:h-auto">
         <div className="mt-auto flex pt-10">
           <div id="logo" className="mr-10 md:mr-0">
-            <img
-              className="w-20"
-              src={logo}
-              alt="company logo"
-            />
+            <img className="w-20" src={logo} alt="company logo" />
           </div>
 
           <div id="about" className="hidden md:block mb-10 md:mx-10">
@@ -97,9 +93,9 @@ function Footer() {
         </div>
 
         <div className="flex mx-auto text-xs md:text-sm mt-6 mb-6">
-          <a className="  font-poppins text-[12px]" href="">
+          <span>
             © 2024 Swipe Industries Private Limited, All Rights Reserved
-          </a>
+          </span>
         </div>
       </div>
     </>
