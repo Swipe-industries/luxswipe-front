@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import googleIcon from "../assets/google.svg";
-import Eye from "../../../reUseComponets/Eye";
-import InputField from "../../../reUseComponets/InputField";
-import OutlineBtn from "../../../reUseComponets/OutlineBtn";
+import Eye from "./ui/Eye";
+import InputField from "./ui/InputField";
+import OutlineBtn from "./ui/OutlineBtn";
 
 function SignUpModal(props) {
   const { onClose } = props;
@@ -49,7 +49,8 @@ function SignUpModal(props) {
 
           <div className="flex justify-center items-center">
               <img
-                className="mb-3 hover:scale-105"
+                role="button"
+                className="mb-3 hover:scale-[1.01]"
                 src={googleIcon}
                 alt="sign-in with google icon"
               />
@@ -81,16 +82,10 @@ function SignUpModal(props) {
 
             <button
               type="button"
-              className="bg-black hover:scale-y-105 font-poppins text-contrast-3 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-blue-500 w-full"
+              className="bg-base-1 font-poppins text-contrast-3 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-blue-500 w-full"
             >
               Sign-Up
             </button>
-
-            <p className="mt-5 mb-1 text-sm font-poppins text-base-3">
-              Already have an account?
-            </p>
-
-            <OutlineBtn label="Login" />
           </div>
         </div>
       </div>
