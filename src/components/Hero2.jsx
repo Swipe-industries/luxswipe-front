@@ -13,26 +13,30 @@ function Hero2() {
         <div className="mx-auto mb-10 text-contrast-3 flex items-center justify-center font-poppins rounded-2xl w-80 h-44 md:w-[500px] md:h-64 bg-contrast-3 bg-opacity-10 backdrop-blur-lg shadow-lg border border-contrast-1/50 hover:border-contrast-1 overflow-hidden">
           <h6 className="mr-1 text-lg md:text-2xl">luxswipe.in/</h6>
           <Marquee>
-            <span>rahul</span>
-            <span>aditya</span>
-            <span>adarsh</span>
-            <span>siddarth</span>
-            <span>vikram</span>
-            <span>rahul</span>
-            <span>aditya</span>
-            <span>adarsh</span>
-            <span>siddarth</span>
-            <span>vikram</span>
-            <span>rahul</span>
-            <span>aditya</span>
-            <span>adarsh</span>
-            <span>siddarth</span>
-            <span>vikram</span>
-            <span>rahul</span>
-            <span>aditya</span>
-            <span>adarsh</span>
-            <span>siddarth</span>
-            <span>vikram</span>
+            <span>dennis</span>
+            <span>emily</span>
+            <span>vaidik</span>
+            <span>leo</span>
+            <span>aisha</span>
+            <span>jin</span>
+            <span>sohail</span>
+            <span>vihaan</span>
+            <span>zhang</span>
+            <span>jisoo</span>
+            <span>clark</span>
+            <span>michael</span>
+            <span>dennis</span>
+            <span>emily</span>
+            <span>vaidik</span>
+            <span>leo</span>
+            <span>aisha</span>
+            <span>jin</span>
+            <span>sohail</span>
+            <span>vihaan</span>
+            <span>zhang</span>
+            <span>jisoo</span>
+            <span>clark</span>
+            <span>michael</span>
           </Marquee>
         </div>
       </div>
