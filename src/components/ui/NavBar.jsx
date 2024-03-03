@@ -4,13 +4,8 @@ import SignUpModal from "../SignUpModal";
 import LoginModal from "../LoginModal";
 
 const NavBar = () => {
-  const [showSignUp, setSignUp] = useState(false);
-  const openSignUp = () => setSignUp(true);
-  const closeSignUp = () => setSignUp(false);
-
-  const [showLogIn, setLogIn] = useState(false);
-  const openLogin = () => setLogIn(true);
-  const closeLogin = () => setLogIn(false);
+  const [showSignUp, setShowSignUp] = useState(false);
+  const [showLogIn, setShowLogIn] = useState(false);
 
   return (
     <>
@@ -28,20 +23,20 @@ const NavBar = () => {
           </a>
           <span
             role="button"
-            onClick={openLogin}
+            onClick={() => setShowLogIn(true)}
             className="text-contrast-3 hover:text-base-1 md:block"
           >
             Login
           </span>
           <div className="flex items-center ml-5 md:ml-20 md:mr-16 mr-5">
-            <OutlineBtn label="Sign-Up" onClick={openSignUp} />
+            <OutlineBtn label="Sign-Up" onClick={() => setShowSignUp(true)} />
             {/* pass the event hadler as prop to deal the functionality of the button */}
           </div>
         </div>
       </nav>
-      {showSignUp && <SignUpModal onClose={closeSignUp} />}
+      {showSignUp && <SignUpModal onClose={() => setShowSignUp(false)} />}
       {/* this is called conditional rendering and I am passing onClose as a prop to the SignUpModal to give the close button a functioality */}
-      {showLogIn && <LoginModal onClose={closeLogin} />}
+      {showLogIn && <LoginModal onClose={() => setShowLogIn(false)} />}
     </>
   );
 };
