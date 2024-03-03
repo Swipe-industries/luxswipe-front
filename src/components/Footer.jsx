@@ -81,13 +81,13 @@ function Footer() {
                   alt="Instagram logo"
                 />
               </a>
-              <a href="">
+              {/* <a href="">
                 <img
                   className="hover:scale-110 scale-125"
                   src={facebook}
                   alt="Facebook logo"
                 />
-              </a>
+              </a> */}
             </div>
           </div>
         </div>
