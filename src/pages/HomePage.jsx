@@ -3,7 +3,7 @@ import Hero1 from "../components/Hero1.jsx";
 import Hero2 from "../components/Hero2.jsx";
 import NavBar from "../components/ui/NavBar.jsx";
 import StartBtn from "../components/ui/StartBtn.jsx";
-import Video from "../components/ui/Video.jsx";
+import Video from "../components/Video.jsx";
 
 function HomePage() {
   return (
