@@ -7,7 +7,7 @@ import mail from "../assets/Mail.svg";
 import phone from "../assets/Phone.svg";
 import linkedin from "../assets/linkedin.svg";
 import instagram from "../assets/instagram.svg";
-import facebook from "../assets/facebook.svg";
+import youtube from "../assets/youtube.svg";
 
 function Footer() {
   return (
@@ -81,13 +81,13 @@ function Footer() {
                   alt="Instagram logo"
                 />
               </a>
-              {/* <a href="">
+              <a href="https://www.youtube.com/channel/UCpP2x2FLcrkOC4vcQVml-ZA">
                 <img
-                  className="hover:scale-110 scale-125"
-                  src={facebook}
-                  alt="Facebook logo"
+                  className="hover:scale-110 scale-125 w-5"
+                  src={youtube}
+                  alt="YouTube Logo"
                 />
-              </a> */}
+              </a>
             </div>
           </div>
         </div>

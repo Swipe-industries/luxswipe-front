@@ -1,11 +1,26 @@
 import React, { useState } from "react";
 import OutlineBtn from "./OutlineBtn";
-import SignUpModal from "../SignUpModal";
 import LoginModal from "../LoginModal";
+import ModalContainer from "../ModalContainer";
 
 const NavBar = () => {
-  const [showSignUp, setShowSignUp] = useState(false);
+
+  const [showModalContainer, setShowModalContainer] = useState(false);
   const [showLogIn, setShowLogIn] = useState(false);
+  const [loginColor, setLoginColor] = useState("contrast-3");
+  const [homeColor, setHomeColor] = useState("base-1");
+
+  const openLogin = () => {
+    setShowLogIn(true);
+    setLoginColor("base-1");
+    setHomeColor("contrast-3")
+  };
+
+  const closeLogin = () => {
+    setShowLogIn(false);
+    setLoginColor("contrast-3");
+    setHomeColor("base-1")
+  };
 
   return (
     <>
@@ -18,25 +33,25 @@ const NavBar = () => {
           </a>
         </div>
         <div className="flex font-poppins items-center">
-          <a href="/" className="mx-4 text-base-1 no-underline hidden md:block">
+          <a href="/" className={`mx-4 text-${homeColor} no-underline hidden md:block`}>
             Home
           </a>
           <span
             role="button"
-            onClick={() => setShowLogIn(true)}
-            className="text-contrast-3 hover:text-base-1 md:block"
+            onClick={openLogin}
+            className={`text-${loginColor} hover:text-base-1 md:block`}
           >
             Login
           </span>
           <div className="flex items-center ml-5 md:ml-20 md:mr-16 mr-5">
-            <OutlineBtn label="Sign-Up" onClick={() => setShowSignUp(true)} />
+            <OutlineBtn label="Sign-Up" onClick={() => setShowModalContainer(true)} />
             {/* pass the event hadler as prop to deal the functionality of the button */}
           </div>
         </div>
       </nav>
-      {showSignUp && <SignUpModal onClose={() => setShowSignUp(false)} />}
+      {showModalContainer && <ModalContainer onClose={() => setShowModalContainer(false)} />}
       {/* this is called conditional rendering and I am passing onClose as a prop to the SignUpModal to give the close button a functioality */}
-      {showLogIn && <LoginModal onClose={() => setShowLogIn(false)} />}
+      {showLogIn && <LoginModal onClose={closeLogin} handleContainer={() => setShowModalContainer(false)} />}
     </>
   );
 };

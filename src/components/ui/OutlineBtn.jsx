@@ -1,5 +1,4 @@
-function OutlineBtn(props) {
-  const {label, onClick} = props //This is called destructuring. We can also directly pass the variables in the function
+function OutlineBtn({label, onClick}) {
   return (
     <>
       <button
