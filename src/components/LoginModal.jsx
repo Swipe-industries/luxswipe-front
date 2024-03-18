@@ -6,6 +6,7 @@ import InputField from "./ui/InputField";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import useGoogleLogin from "../hooks/useGoogleLogin";
 import usePasswordEye from "../hooks/usePasswordEye";
+import DialogueBox from "./ui/DialogueBox";
 
 function LoginModal({ onClose, handleContainer }) {
   //Hooks
@@ -14,6 +15,7 @@ function LoginModal({ onClose, handleContainer }) {
   const navigateTo = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPasswordResetBox, setShowPassordResetBox] = useState(false);
 
   const handleOutsideClick = (event) => {
     if (event.target.id === "container") {
@@ -143,11 +145,14 @@ function LoginModal({ onClose, handleContainer }) {
             </button>
 
             <a
-              href="#"
+              role="button"
+              onClick={() => setShowPassordResetBox(true)}
               className="font-poppins text-xs underline text-mid-1 hover:text-base-2"
             >
               Forgot Your Passord?
             </a>
+
+            {showPasswordResetBox && <DialogueBox onClose={() => setShowPassordResetBox(false)}/> }
           </div>
         </div>
       </div>

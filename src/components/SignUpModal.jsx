@@ -1,4 +1,3 @@
-//how can i open login modal and close signup at the same time
 import React, { useState } from "react";
 import { auth } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +25,7 @@ function SignUpModal({ onClose, openLogin, handleContainer }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const [showLogIn, setShowLogIn] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   const handleOutsideClick = (event) => {
     if (event.target.id === "container") {
@@ -37,27 +37,32 @@ function SignUpModal({ onClose, openLogin, handleContainer }) {
   const handleCloseButtonClick = () => {
     onClose();
     handleContainer();
-  }
+  };
 
   //Logic to create a new user and handle it
   const signUp = async () => {
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // SignUp successful, user is authenticated
-        const user = userCredential.user;
-        updateProfile(user, { displayName: fullName });
-        // console.log(user);
-        // console.log(user.displayName);
-        // Optionally, you can perform additional actions here, such as redirecting the user to another page or updating the UI
-        navigateTo("/username");
-      })
-      .catch((error) => {
-        // Handle errors
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage);
-        // Optionally, you can display error messages to the user or handle them in other ways
-      });
+    if (username.trim() === "") {
+      setShowWarning(true); //to show warning is username is empty
+    } else {
+      setShowWarning(false); //to hide the waring if username is not empty
+      await createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // SignUp successful, user is authenticated
+          const user = userCredential.user;
+          updateProfile(user, { displayName: fullName });
+          // console.log(user);
+          // console.log(user.displayName);
+          // Optionally, you can perform additional actions here, such as redirecting the user to another page or updating the UI
+          navigateTo("/username");
+        })
+        .catch((error) => {
+          // Handle errors
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage);
+          // Optionally, you can display error messages to the user or handle them in other ways
+        });
+    }
   };
 
   //logic to check if the passwords matches or not
@@ -72,8 +77,7 @@ function SignUpModal({ onClose, openLogin, handleContainer }) {
   const handleLoginButton = () => {
     openLogin();
     onClose();
-  }
-
+  };
 
   return (
     <>
@@ -112,6 +116,10 @@ function SignUpModal({ onClose, openLogin, handleContainer }) {
             placeholder={"Username"}
             onChange={(e) => setUsername(e.target.value)}
           />
+
+          <div className="md:text-sm text-xs mb-2 mx-1 text-[#FF0000] font-bold font-poppins">
+            { showWarning && <p>This field is required.</p>}
+          </div>
 
           <div className="flex justify-center items-center">
             <img
@@ -252,7 +260,7 @@ function SignUpModal({ onClose, openLogin, handleContainer }) {
               </button>
             </div>
 
-            <div className="md:text-sm text-xs mb-2 mx-1 text-red-700 font-poppins">
+            <div className="md:text-sm text-xs mb-2 mx-1 text-[#FF0000] font-poppins">
               <h1>{isPasswordMatched(password, confirmPassword)}</h1>
             </div>
 
