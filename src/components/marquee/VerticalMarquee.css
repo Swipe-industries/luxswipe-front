@@ -1,5 +1,5 @@
 .vertical-marquee {
-    height: 50px; /* Set height of the marquee container */
+    height: 80px; /* Set height of the marquee container */
     overflow: hidden;
     position: relative;
     margin-top: -0px;
@@ -8,7 +8,7 @@
   .animate-marquee {
     position: absolute;
     top: 0;
-    animation: marquee 10s linear infinite;
+    animation: marquee 15s linear infinite;
   }
   
   @keyframes marquee {

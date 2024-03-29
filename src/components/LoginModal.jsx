@@ -5,32 +5,28 @@ import googleIcon from "../assets/google.svg";
 import InputField from "./ui/InputField";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import useGoogleLogin from "../hooks/useGoogleLogin";
+import usePasswordEye from "../hooks/usePasswordEye";
+import DialogueBox from "./ui/DialogueBox";
 
-function LoginModal({ onClose }) {
+function LoginModal({ onClose, handleContainer }) {
   //Hooks
+  const [fieldType, isPasswordVisible, passwordVisibility] = usePasswordEye();
   const logInWithGoogle = useGoogleLogin();
   const navigateTo = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fieldType, setfieldType] = useState("password");
-  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
-
-  const showPassword = () => setfieldType("text");
-  const hidePassword = () => setfieldType("password");
+  const [showPasswordResetBox, setShowPassordResetBox] = useState(false);
 
   const handleOutsideClick = (event) => {
     if (event.target.id === "container") {
       onClose();
+      handleContainer();
     }
   };
 
-  function togglePasswordVisibility() {
-    setIsPasswordVisible((prevState) => !prevState);
-    if (isPasswordVisible) {
-      showPassword();
-    } else {
-      hidePassword();
-    }
+  const handleCloseButtonClick = () => {
+    onClose();
+    handleContainer();
   }
 
   const logIn = async () => {
@@ -56,7 +52,7 @@ function LoginModal({ onClose }) {
       >
         <div className="bg-tiffany-blue p-8 rounded-xl shadow-md w-80 md:w-[500px] px-10 relative">
           <button
-            onClick={onClose}
+            onClick={handleCloseButtonClick}
             className="absolute top-2 right-2 text-3xl text-base-1 cursor-pointer hover:text-base-3 focus:outline-none"
           >
             &times;
@@ -100,7 +96,7 @@ function LoginModal({ onClose }) {
               />
               <button
                 className="absolute inset-y-0 right-0 flex items-center px-3 text-base-1"
-                onClick={togglePasswordVisibility}
+                onClick={passwordVisibility}
               >
                 {isPasswordVisible ? (
                   <svg
@@ -149,11 +145,14 @@ function LoginModal({ onClose }) {
             </button>
 
             <a
-              href="#"
+              role="button"
+              onClick={() => setShowPassordResetBox(true)}
               className="font-poppins text-xs underline text-mid-1 hover:text-base-2"
             >
               Forgot Your Passord?
             </a>
+
+            {showPasswordResetBox && <DialogueBox onClose={() => setShowPassordResetBox(false)}/> }
           </div>
         </div>
       </div>
