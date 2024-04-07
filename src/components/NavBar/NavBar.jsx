@@ -70,7 +70,7 @@ function NavBar() {
             variant="light"
             className="font-semibold mx-2 font-poppins"
             size="sm"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/auth/login")}
           >
             Login
           </Button>
@@ -79,7 +79,7 @@ function NavBar() {
             variant="flat"
             className="font-poppins font-medium bg-mystic text-white"
             size="sm"
-            onClick={() => navigate("signup")}
+            onClick={() => navigate("/auth/signup")}
           >
             Get Started
           </Button>

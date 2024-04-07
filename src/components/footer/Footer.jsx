@@ -23,7 +23,7 @@ function Footer() {
             <img className="w-20" src={logo} alt="company logo" />
           </div>
 
-          <div id="about" className="hidden md:block mb-10 md:mx-10">
+          <div id="about" className="mb-10 md:mx-10">
             <p className="text-xs font-poppins font-medium text-base-2 mb-1">About</p>
 
             <div className="flex items-center">
@@ -47,7 +47,7 @@ function Footer() {
             </div>
           </div>
 
-          <div id="contacts" className="mb-5">
+          <div id="contacts" className="mb-5 hidden md:block">
             <p className="text-xs font-poppins font-medium text-base-2 mb-1">Contacts</p>
 
             {/* <div className="flex items-center">
@@ -103,13 +103,13 @@ function Footer() {
           {/* <NavLink to="/" className={`hover:text-white`}>
             Home
           </NavLink> */}
-          <NavLink to="/about" className={`hover:text-white`}>
+          <NavLink to="/about" className={`hover:text-white underline`}>
             About
           </NavLink>
-          <NavLink to="/contact-us" className={`hover:text-white`}>
+          <NavLink to="/contact-us" className={`hover:text-white underline`}>
             Contact Us
           </NavLink>
-          <NavLink to="/faq" className={`hover:text-white`}>
+          <NavLink to="/faq" className={`hover:text-white underline`}>
             FAQs
           </NavLink>
         </div>
