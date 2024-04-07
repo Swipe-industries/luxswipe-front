@@ -2,15 +2,13 @@ import { useState } from "react";
 import React from "react";
 import { Input } from "@nextui-org/react";
 import google from "../../assets/google.svg";
-import { EyeFilledIcon } from "./EyeFilledIcon";
-import { EyeSlashFilledIcon } from "./EyeSlashFilledIcon";
+import { EyeFilledIcon } from "../ui/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../ui/EyeSlashFilledIcon";
 
 function SignUp() {
   const [formData, setFormData] = useState({
-    username: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);

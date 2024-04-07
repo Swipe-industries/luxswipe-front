@@ -5,11 +5,11 @@ import { motion } from "framer-motion";
 function Maqsad() {
   return (
     <div className="h-auto relative rounded-2xl p-10 mx-5  mb-5">
-      <div className="flex justify-center gap-52 lg:mb-8 mb-16">
+      <div className="flex justify-center gap-52 md:mb-8 mb-16">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: -0, transition: { duration: 1 } }}
-          className="hidden font-kalnia text-3xl text-white font-light lg:flex items-center justify-center gap-2"
+          className="hidden font-kalnia text-3xl text-white font-light md:flex items-center justify-center gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,7 @@ function Maqsad() {
           </Card>
         </motion.div>
       </div>
-      <div className="flex justify-center gap-52 lg:mb-8 mb-16">
+      <div className="flex justify-center gap-52 md:mb-8 mb-16">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
@@ -70,7 +70,7 @@ function Maqsad() {
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0, transition: { duration: 1 } }}
-          className="hidden font-kalnia text-3xl text-white font-light lg:flex items-center justify-center gap-2"
+          className="hidden font-kalnia text-3xl text-white font-light md:flex items-center justify-center gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -90,11 +90,11 @@ function Maqsad() {
           <h1>Create Post On LuxSwipe</h1>
         </motion.div>
       </div>
-      <div className="flex justify-center gap-52 lg:mb-8 mb-16">
+      <div className="flex justify-center gap-52 md:mb-8 mb-16">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: -0, transition: { duration: 1 } }}
-          className="hidden font-kalnia text-3xl text-white font-light lg:flex items-center justify-center gap-2"
+          className="hidden font-kalnia text-3xl text-white font-light md:flex items-center justify-center gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -134,7 +134,7 @@ function Maqsad() {
           </Card>
         </motion.div>
       </div>
-      <div className="flex justify-center gap-52 lg:mb-8 mb-16">
+      <div className="flex justify-center gap-52 md:mb-8 mb-16">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
@@ -157,7 +157,7 @@ function Maqsad() {
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0, transition: { duration: 1 } }}
-          className="hidden font-kalnia text-3xl text-white font-light lg:flex items-center justify-center gap-2"
+          className="hidden font-kalnia text-3xl text-white font-light md:flex items-center justify-center gap-2"
         >
           {" "}
           <svg
@@ -180,7 +180,7 @@ function Maqsad() {
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: -0, transition: { duration: 1 } }}
-          className="hidden font-kalnia text-3xl text-white font-light lg:flex items-center justify-center gap-2"
+          className="hidden font-kalnia text-3xl text-white font-light md:flex items-center justify-center gap-2"
         >
           {" "}
           <svg

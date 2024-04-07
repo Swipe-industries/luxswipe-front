@@ -76,8 +76,8 @@ function NavBar() {
           </Button>
 
           <Button
-            variant="flat"
-            className="font-poppins font-medium bg-mystic text-white"
+            color="primary"
+            className="font-poppins font-medium text-white"
             size="sm"
             onClick={() => navigate("/auth/signup")}
           >

@@ -15,7 +15,7 @@ import About from "./pages/About.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import Login from "./pages/Login.jsx";
+import Login from "./components/Login/Login.jsx";
 import SignUp from "./components/Sign-up/SignUp.jsx";
 import Error from "./pages/Error.jsx";
 

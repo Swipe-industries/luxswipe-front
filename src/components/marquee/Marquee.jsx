@@ -54,8 +54,9 @@ function Marquee({ children }) {
         </div>
         <div className="text-center">
           <Button
+            color="primary"
             variant="shadow"
-            className="bg-mystic shadow-mystic font-poppins text-white"
+            className="font-poppins text-white"
             size="lg"
             onClick={() => navigate("/auth/signup")}
           >

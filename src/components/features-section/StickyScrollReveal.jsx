@@ -87,7 +87,7 @@ function StickyScrollReveal({content, contentClassName}) {
             background: linearGradients[activeCard % linearGradients.length],
           }}
           className={cn(
-            "hidden lg:block h-72 w-1/2 rounded-3xl bg-white sticky top-10 overflow-hidden",
+            "hidden md:block h-72 w-1/2 rounded-3xl bg-white sticky top-10 overflow-hidden",
             contentClassName
           )}
         >
