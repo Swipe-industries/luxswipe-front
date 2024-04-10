@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   status: false,
   user: null,
-  error: null,
+  error: "",
 };
 
 export const authSlice = createSlice({
@@ -23,7 +23,7 @@ export const authSlice = createSlice({
     },
 
     clearError: (state) => {
-      state.error = null;
+      state.error = "";
     },
   },
 });

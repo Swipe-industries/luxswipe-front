@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Input,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  Button,
-  useDisclosure,
-} from "@nextui-org/react";
+import { Input, Button } from "@nextui-org/react";
 import google from "../../assets/google.svg";
 import { EyeFilledIcon } from "../ui/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../ui/EyeSlashFilledIcon";
@@ -19,6 +12,7 @@ import {
   clearError,
 } from "../../feature/authSlice";
 import { useNavigate } from "react-router-dom";
+import ErrorPopup from "../ui/ErrorPopup";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -27,12 +21,10 @@ function SignUp() {
   });
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const error = useSelector((state) => state.error);
-  console.log(error);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const togglePasswordVisibility = () =>
     setIsPasswordVisible(!isPasswordVisible);
@@ -43,8 +35,7 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(clearError());
-
+    dispatch(clearError(""));
     try {
       const response = await authService.createUser(
         formData.email,
@@ -57,82 +48,71 @@ function SignUp() {
         // Redirect to the next page or perform any other necessary actions
       } else {
         dispatch(setError(response));
+        setIsPopupOpen(true);
       }
     } catch (error) {
       dispatch(setError(error));
+      setIsPopupOpen(true);
     }
   };
 
   return (
     <div className="z-10 bg-black p-8 rounded-lg shadow-lg max-w-lg w-full">
-      <h2 className="text-white font-kalnia font-light text-3xl mb-6">
-        Create Account
-      </h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <Input
-            name="email"
+      <ErrorPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+      <div className="z-10 bg-black p-8 rounded-lg shadow-lg max-w-lg w-full">
+        <h2 className="text-white font-kalnia font-light text-3xl mb-6">
+          Create Account
+        </h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <Input
+              name="email"
+              color="primary"
+              type="email"
+              placeholder="you@email.com"
+              size="lg"
+              variant="bordered"
+              radius="md"
+              className="text-white font-poppins font-medium placeholder:font-poppins"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="mb-4">
+            <Input
+              name="password"
+              color="primary"
+              type={isPasswordVisible ? "text" : "password"}
+              placeholder="Choose Password"
+              size="lg"
+              variant="bordered"
+              radius="md"
+              endContent={
+                <button
+                  className="focus:outline-none"
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                >
+                  {isPasswordVisible ? (
+                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  ) : (
+                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  )}
+                </button>
+              }
+              className="text-white font-poppins font-medium placeholder:font-poppins"
+              onChange={handleChange}
+            />
+          </div>
+
+          <Button
+            type="submit"
             color="primary"
-            type="email"
-            placeholder="you@email.com"
-            size="lg"
-            variant="bordered"
-            radius="md"
-            className="text-white font-poppins font-medium placeholder:font-poppins"
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="mb-4">
-          <Input
-            name="password"
-            color="primary"
-            type={isPasswordVisible ? "text" : "password"}
-            placeholder="Choose Password"
-            size="lg"
-            variant="bordered"
-            radius="md"
-            endContent={
-              <button
-                className="focus:outline-none"
-                type="button"
-                onClick={togglePasswordVisibility}
-              >
-                {isPasswordVisible ? (
-                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                ) : (
-                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                )}
-              </button>
-            }
-            className="text-white font-poppins font-medium placeholder:font-poppins"
-            onChange={handleChange}
-          />
-        </div>
-
-        <Button
-          onPress={onOpen}
-          type="submit"
-          color="primary"
-          className="w-full text-white font-poppins rounded-lg"
-        >
-          Sign Up
-        </Button>
-
-        <Modal 
-        isOpen={isOpen} 
-        placement='top'
-        onOpenChange={onOpenChange} 
-      >
-        <ModalContent>
-          {() => (
-            <>
-              <ModalHeader className="flex flex-col gap-1 text-[#f31260]">{error}</ModalHeader>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-
+            className="w-full text-white font-poppins rounded-lg"
+          >
+            Sign Up
+          </Button>
+        </form>
 
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
@@ -146,7 +126,7 @@ function SignUp() {
           <img src={google} alt="Google" className="h-5 w-5 mr-2" />
           Continue with Google
         </button>
-      </form>
+      </div>
     </div>
   );
 }
