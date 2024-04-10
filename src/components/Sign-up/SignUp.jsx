@@ -56,8 +56,28 @@ function SignUp() {
     }
   };
 
+  const handleGoogleSingIn = async () => {
+    dispatch(setError(""));
+
+    try {
+      const response = await authService.googleSignin();
+      if (response.providerId) {
+        dispatch(setStatus(true));
+        dispatch(setUser(response));
+        navigate("/auth/newuser");
+        // Redirect to the next page or perform any other necessary actions
+      } else {
+        dispatch(setError(response));
+        setIsPopupOpen(true);
+      }
+    } catch (error) {
+      dispatch(setError(error));
+      setIsPopupOpen(true);
+    }
+  };
+
   return (
-    <div className="z-10 bg-black p-8 rounded-lg shadow-lg max-w-lg w-full">
+    <div className="z-10 bg-black p-5 rounded-lg shadow-lg max-w-lg w-full">
       <ErrorPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
       <div className="z-10 bg-black p-8 rounded-lg shadow-lg max-w-lg w-full">
         <h2 className="text-white font-kalnia font-light text-3xl mb-6">
@@ -113,6 +133,20 @@ function SignUp() {
             Sign Up
           </Button>
         </form>
+        <div className="my-2">
+          <h1 className="font-poppins font-light mb-1 text-contrast-2 text-xs">
+            Already have an account?
+          </h1>
+          <Button
+            size="sm"
+            variant="flat"
+            color="primary"
+            className="font-poppins"
+            onClick={() => navigate("/auth/login")}
+          >
+            Login
+          </Button>
+        </div>
 
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
@@ -122,7 +156,10 @@ function SignUp() {
             <span className="bg-black px-4 font-poppins text-sm">Or</span>
           </div>
         </div>
-        <button className="w-full py-2 px-4 bg-black text-white font-medium font-poppins rounded-lg border border-white hover:border-mystic transition-colors duration-300 flex items-center justify-center">
+        <button
+          onClick={handleGoogleSingIn}
+          className="w-full py-2 px-4 bg-black text-white font-medium font-poppins rounded-lg border border-white hover:border-mystic transition-colors duration-300 flex items-center justify-center"
+        >
           <img src={google} alt="Google" className="h-5 w-5 mr-2" />
           Continue with Google
         </button>

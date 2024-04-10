@@ -1,6 +1,11 @@
 import conf from "../conf/conf.js";
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: conf.firebaseApiKey,
@@ -33,6 +38,7 @@ function formatErrorMessage(errorString) {
 class AuthService {
   constructor() {
     this.auth = auth;
+    this.provider = new GoogleAuthProvider();
   }
 
   async createUser(email, password) {
@@ -43,6 +49,28 @@ class AuthService {
         password
       );
       const response = userCredential.user;
+      const userInfo = {
+        uid: response.uid,
+        displayName: response.displayName,
+        email: response.email,
+        emailVerified: response.emailVerified,
+        photoURL: response.photoURL,
+        createdAt: response.metadata.createdAt,
+        lastLoginAt: response.metadata.lastLoginAt,
+        lastSignInTime: response.metadata.lastSignInTime,
+        creationTime: response.metadata.creationTime,
+        providerId: response.providerId,
+      };
+      return userInfo;
+    } catch (error) {
+      return formatErrorMessage(error.code);
+    }
+  }
+
+  async googleSignin() {
+    try {
+      const result = await signInWithPopup(this.auth, this.provider);
+      const response = result.user;
       const userInfo = {
         uid: response.uid,
         displayName: response.displayName,
