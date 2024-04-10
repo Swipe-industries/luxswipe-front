@@ -5,19 +5,19 @@ function NavBar() {
   const navigate = useNavigate();
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full flex items-center justify-between px-4 py-2 lg:px-40 text-white">
+      <nav className="fixed top-0 z-50 w-full flex items-center justify-between px-4 py-2 md:px-40 text-white">
         {/* Left side - Company name */}
         <div className="flex items-center">
           <Link
             to="/"
-            className="lg:text-5xl text-3xl font-kalnia font-normal text-mystic"
+            className="md:text-5xl text-3xl font-kalnia font-normal text-mystic"
           >
             LuxSwipe
           </Link>
         </div>
 
         {/* Center - Section links */}
-        <div className="hidden relative lg:flex py-2 px-5">
+        <div className="hidden relative md:flex py-2 px-5">
           <div className="absolute inset-0 bg-black/10 rounded-full border border-white/50 backdrop-blur-sm" />
           <div className="relative flex justify-center items-center gap-3">
             <NavLink
@@ -81,7 +81,7 @@ function NavBar() {
             size="sm"
             onClick={() => navigate("/auth/signup")}
           >
-            Get Started
+            Sign Up
           </Button>
         </div>
       </nav>

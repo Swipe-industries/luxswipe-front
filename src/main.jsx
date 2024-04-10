@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import store from "./store.js";
+import { Provider } from "react-redux";
 import Root from "./Root.jsx";
 import Layout from "./Layout.jsx";
 import "./index.css";
@@ -17,6 +19,7 @@ import FAQ from "./pages/FAQ.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Login from "./components/Login/Login.jsx";
 import SignUp from "./components/Sign-up/SignUp.jsx";
+import NewUser from "./pages/NewUser.jsx";
 import Error from "./pages/Error.jsx";
 
 const router = createBrowserRouter(
@@ -34,15 +37,18 @@ const router = createBrowserRouter(
         <Route path="" element={<Home />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="login" element={<Login />} />
+        <Route path="newuser" element={<NewUser />} />
       </Route>
     </>
   )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <NextUIProvider>
-      <RouterProvider router={router} />
-    </NextUIProvider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <React.StrictMode>
+      <NextUIProvider>
+        <RouterProvider router={router} />
+      </NextUIProvider>
+    </React.StrictMode>
+  </Provider>
 );

@@ -9,7 +9,6 @@ function Root() {
       <div className="h-full w-full bg-black bg-grid-mystic/[0.4] relative flex items-center justify-center">
         {/* Radial gradient for the container to give a faded look */}
         <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-black  [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
-        <div className="h-full bg-black bg-opacity-5 backdrop-blur-[01px] w-full absolute z-10"></div>
         <div className="inline-block w-full z-10">
           <Outlet />
         </div>
