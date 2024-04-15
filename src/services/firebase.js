@@ -5,6 +5,8 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -86,6 +88,37 @@ class AuthService {
       return userInfo;
     } catch (error) {
       return formatErrorMessage(error.code);
+    }
+  }
+
+  async login(email, password){
+    try{
+      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+      const response = userCredential.user;
+      const userInfo = {
+        uid: response.uid,
+        displayName: response.displayName,
+        email: response.email,
+        emailVerified: response.emailVerified,
+        photoURL: response.photoURL,
+        createdAt: response.metadata.createdAt,
+        lastLoginAt: response.metadata.lastLoginAt,
+        lastSignInTime: response.metadata.lastSignInTime,
+        creationTime: response.metadata.creationTime,
+        providerId: response.providerId,
+      };
+      return userInfo;
+    }catch(error){
+      return formatErrorMessage(error.code)
+    }
+  }
+
+  async resetPassword(email){
+    try{
+      await sendPasswordResetEmail(this.auth, email)
+      return "Password Reset Link Sent"
+    }catch(error){
+      return formatErrorMessage(error.code)
     }
   }
 }

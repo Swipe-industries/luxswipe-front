@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Input, Button } from "@nextui-org/react";
 import google from "../../assets/google.svg";
 import { EyeFilledIcon } from "../ui/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../ui/EyeSlashFilledIcon";
+import ErrorPopup from "../ui/ErrorPopup";
 import authService from "../../services/firebase";
 import {
   setStatus,
@@ -12,7 +13,6 @@ import {
   clearError,
 } from "../../feature/authSlice";
 import { useNavigate } from "react-router-dom";
-import ErrorPopup from "../ui/ErrorPopup";
 
 function SignUp() {
   const [formData, setFormData] = useState({
