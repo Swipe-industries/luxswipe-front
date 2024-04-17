@@ -1,6 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import store from "./store.js";
+import { Provider } from "react-redux";
 import Root from "./Root.jsx";
+import Layout from "./Layout.jsx";
 import "./index.css";
 import { NextUIProvider } from "@nextui-org/react";
 import {
@@ -14,28 +17,38 @@ import About from "./pages/About.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import Login from "./pages/Login.jsx";
-import SignUp from "./pages/SignUp.jsx";
+import Login from "./components/Login/Login.jsx";
+import SignUp from "./components/Sign-up/SignUp.jsx";
+import NewUser from "./pages/NewUser.jsx";
 import Error from "./pages/Error.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Root />}>
-      <Route path="" element={<Home />} />
-      <Route path="about" element={<Error />} />
-      <Route path="contact-us" element={<Error />} />
-      <Route path="faq" element={<Error />} />
-      <Route path=":username" element={<Error />} />
-      <Route path="login" element={<Error />} />
-      <Route path="signup" element={<Error />} />
-    </Route>
+    <>
+      <Route path="/" element={<Root />}>
+        <Route path="" element={<Home />} />
+        <Route path="about" element={<Error />} />
+        <Route path="contact-us" element={<Error />} />
+        <Route path="faq" element={<Error />} />
+        <Route path=":username" element={<Error />} />
+      </Route>
+
+      <Route path="/auth" element={<Layout />}>
+        <Route path="" element={<Home />} />
+        <Route path="signup" element={<SignUp />} />
+        <Route path="login" element={<Login />} />
+        <Route path="newuser" element={<NewUser />} />
+      </Route>
+    </>
   )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <NextUIProvider>
-      <RouterProvider router={router} />
-    </NextUIProvider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <React.StrictMode>
+      <NextUIProvider>
+        <RouterProvider router={router} />
+      </NextUIProvider>
+    </React.StrictMode>
+  </Provider>
 );

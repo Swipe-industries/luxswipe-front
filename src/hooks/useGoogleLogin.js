@@ -1,36 +1,33 @@
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth } from "../services/firebase";
+import authService from "../services/firebase";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setError, setStatus, setUser, clearError } from "../feature/authSlice";
 
-function useGoogleLogin() {
-  const navigateTo = useNavigate();
+function useGoogleLogin(setIsPopupOpen) {
 
-  const logInWithGoogle = async () => {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider)
-        .then((result) => {
-          navigateTo("/username");
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential.accessToken;
-          // The signed-in user info.
-          const user = result.user;
-          // IdP data available using getAdditionalUserInfo(result)
-          // console.log(token);
-          // console.log(user);
-        })
-        .catch((error) => {
-          // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // The email of the user's account used.
-          const email = error.customData.email;
-          // The AuthCredential type that was used.
-          const credential = GoogleAuthProvider.credentialFromError(error);
-          // ...
-        });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleGoogleSingIn = async () => {
+    dispatch(clearError());
+
+    try {
+      const response = await authService.googleSignin();
+      if (response.providerId) {
+        dispatch(setStatus(true));
+        dispatch(setUser(response));
+        navigate("/auth/newuser");
+        // Redirect to the next page or perform any other necessary actions
+      } else {
+        dispatch(setError(response));
+        setIsPopupOpen(true);
+      }
+    } catch (error) {
+      dispatch(setError(error));
+      setIsPopupOpen(true);
+    }
   };
-  return logInWithGoogle;
+  return handleGoogleSingIn;
 }
 
 export default useGoogleLogin;
