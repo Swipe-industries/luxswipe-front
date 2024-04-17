@@ -4,25 +4,44 @@ import { Input, Button } from "@nextui-org/react";
 import authService from "../../services/firebase";
 import { useDispatch } from "react-redux";
 import { clearError, setError } from "../../feature/authSlice";
+import SuccessPopup from "../ui/SuccessPopup";
+import ErrorPopup from "../ui/ErrorPopup";
 
 const ResetPasswordPopup = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(clearError(""))
+    dispatch(clearError(""));
     // Handle form submission with the entered email
-    try{
-      const message = authService.resetPassword(email);
-      dispatch(setError(message))
-      onClose()
-    } catch(error){
-      dispatch(setError(error))
+    try {
+      const message = await authService.resetPassword(email);
+      if (message == "Password Reset Link Sent") {
+        dispatch(setError(message));
+        setShowSuccessPopup(true);
+        setEmail("")
+        onClose();
+      } else {
+        dispatch(setError(message));
+        setIsErrorPopupOpen(true);
+      }
+    } catch (error) {
+      dispatch(setError(error));
     }
   };
   return (
     <div>
+      <SuccessPopup
+        isOpen={showSuccessPopup}
+        onClose={() => setShowSuccessPopup(false)}
+      />
+      <ErrorPopup
+        isOpen={isErrorPopupOpen}
+        onClose={() => setIsErrorPopupOpen(false)}
+      />
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -54,9 +73,9 @@ const ResetPasswordPopup = ({ isOpen, onClose }) => {
                 <div className="flex justify-between">
                   <Button
                     size="sm"
-                    color="primary"
+                    color="danger"
                     variant="light"
-                    className="font-poppins font-medium"
+                    className="font-poppins font-semibold tracking-tighter"
                     onClick={onClose}
                   >
                     Cancel
@@ -65,8 +84,8 @@ const ResetPasswordPopup = ({ isOpen, onClose }) => {
                     type="submit"
                     size="sm"
                     color="primary"
-                    variant="flat"
-                    className="font-poppins font-medium"
+                    variant="ghost"
+                    className="font-poppins font-semibold tracking-tighter"
                   >
                     Submit
                   </Button>

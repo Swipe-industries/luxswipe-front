@@ -13,6 +13,7 @@ import {
   clearError,
 } from "../../feature/authSlice";
 import { useNavigate } from "react-router-dom";
+import useGoogleLogin from "../../hooks/useGoogleLogin";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -25,6 +26,9 @@ function SignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  //Custom Hook
+  const handleGoogleSingIn = useGoogleLogin(setIsPopupOpen);
 
   const togglePasswordVisibility = () =>
     setIsPasswordVisible(!isPasswordVisible);
@@ -41,26 +45,6 @@ function SignUp() {
         formData.email,
         formData.password
       );
-      if (response.providerId) {
-        dispatch(setStatus(true));
-        dispatch(setUser(response));
-        navigate("/auth/newuser");
-        // Redirect to the next page or perform any other necessary actions
-      } else {
-        dispatch(setError(response));
-        setIsPopupOpen(true);
-      }
-    } catch (error) {
-      dispatch(setError(error));
-      setIsPopupOpen(true);
-    }
-  };
-
-  const handleGoogleSingIn = async () => {
-    dispatch(setError(""));
-
-    try {
-      const response = await authService.googleSignin();
       if (response.providerId) {
         dispatch(setStatus(true));
         dispatch(setUser(response));

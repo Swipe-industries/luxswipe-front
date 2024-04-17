@@ -14,6 +14,7 @@ import {
 } from "../../feature/authSlice";
 import ErrorPopup from "../ui/ErrorPopup";
 import ResetPasswordPopup from "./ResetPasswordPopup";
+import useGoogleLogin from "../../hooks/useGoogleLogin";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -26,6 +27,9 @@ function Login() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  //Custom Hook
+  const handleGoogleSingIn = useGoogleLogin(setIsErrorPopupOpen);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePasswordVisibility = () =>
@@ -125,6 +129,7 @@ function Login() {
               Login
             </Button>
           </form>
+
           <div className="my-2">
             <h1 className="font-poppins font-light mb-1 text-contrast-2 text-xs">
               Don't have an account?
@@ -139,6 +144,7 @@ function Login() {
               Sign Up
             </Button>
           </div>
+
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-600"></div>
@@ -147,7 +153,7 @@ function Login() {
               <span className="bg-black px-4 font-poppins text-sm">Or</span>
             </div>
           </div>
-          <button className="w-full py-2 px-4 bg-black text-white font-medium font-poppins rounded-lg border border-white hover:border-mystic transition-colors duration-300 flex items-center justify-center">
+          <button onClick={handleGoogleSingIn} className="w-full py-2 px-4 bg-black text-white font-medium font-poppins rounded-lg border border-white hover:border-mystic transition-colors duration-300 flex items-center justify-center">
             <img src={google} alt="Google" className="h-5 w-5 mr-2" />
             Continue with Google
           </button>
