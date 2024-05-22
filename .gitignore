@@ -25,3 +25,4 @@ dist-ssr
 *test.js
 *Test.jsx
 .env
+*AuthLayout.jsx

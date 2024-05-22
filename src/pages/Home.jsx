@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Features from "../components/features-section/Features";
 import Maqsad from "../components/how-it-works/Maqsad";
 import Marquee from "../components/marquee/Marquee";
-import Footer from "../components/footer/Footer";
+
 
 function Home() {
   const images = [
@@ -79,10 +79,6 @@ function Home() {
           <span>clark</span>
           <span>michael</span>
         </Marquee>
-      </div>
-
-      <div>
-        <Footer />
       </div>
     </>
   );

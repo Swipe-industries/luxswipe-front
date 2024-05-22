@@ -15,7 +15,7 @@ function Footer() {
     <>
       <div
         id="footer"
-        className="flex flex-col mt-10 bg-mystic shadow-sm justify-center items-center w-full md:h-auto"
+        className="flex flex-col bg-mystic shadow-sm justify-center items-center w-full md:h-auto"
       >
         
         <div className="mt-auto flex pt-10">
