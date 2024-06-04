@@ -1,5 +1,6 @@
 import conf from "../conf/conf.js";
 import { initializeApp } from "firebase/app";
+import { formatErrorMessage } from "../utils/errorMessages.js";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -22,21 +23,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-//function to customise the error message
-function formatErrorMessage(errorString) {
-  // Remove "auth/" from the string
-  errorString = errorString.replace("auth/", "");
-
-  // Replace "-" with a space
-  errorString = errorString.replace(/-/g, " ");
-
-  // Capitalize the first letter of each word
-  errorString = errorString.replace(/\b\w/g, (char) => {
-    return char.toUpperCase();
-  });
-  return errorString;
-}
-
 class AuthService {
   constructor() {
     this.auth = auth;
@@ -53,6 +39,7 @@ class AuthService {
       const response = userCredential.user;
       const userInfo = {
         uid: response.uid,
+        username: "",
         displayName: response.displayName,
         email: response.email,
         emailVerified: response.emailVerified,
@@ -75,6 +62,7 @@ class AuthService {
       const response = result.user;
       const userInfo = {
         uid: response.uid,
+        username: "",
         displayName: response.displayName,
         email: response.email,
         emailVerified: response.emailVerified,
@@ -97,6 +85,7 @@ class AuthService {
       const response = userCredential.user;
       const userInfo = {
         uid: response.uid,
+        username: "",
         displayName: response.displayName,
         email: response.email,
         emailVerified: response.emailVerified,

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Input, Button } from "@nextui-org/react";
 import google from "../../assets/google.svg";
 import { EyeFilledIcon } from "../ui/EyeFilledIcon";
@@ -12,39 +12,39 @@ import {
   setError,
   clearError,
 } from "../../feature/authSlice";
+import {
+  setEmail,
+  setPassword,
+  togglePasswordVisibility,
+} from "../../feature/formSlice";
 import { useNavigate } from "react-router-dom";
 import useGoogleLogin from "../../hooks/useGoogleLogin";
 
 function SignUp() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { email, password, isPasswordVisible } = useSelector(
+    (state) => state.form
+  );
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   //Custom Hook
-  const handleGoogleSingIn = useGoogleLogin(setIsPopupOpen);
-
-  const togglePasswordVisibility = () =>
-    setIsPasswordVisible(!isPasswordVisible);
+  const handleGoogleSignIn = useGoogleLogin(setIsPopupOpen);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "email") {
+      dispatch(setEmail(e.target.value));
+    } else {
+      dispatch(setPassword(e.target.value));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(clearError(""));
     try {
-      const response = await authService.createUser(
-        formData.email,
-        formData.password
-      );
+      const response = await authService.createUser(email, password);
       if (response.providerId) {
         dispatch(setStatus(true));
         dispatch(setUser(response));
@@ -95,7 +95,7 @@ function SignUp() {
                 <button
                   className="focus:outline-none"
                   type="button"
-                  onClick={togglePasswordVisibility}
+                  onClick={() => dispatch(togglePasswordVisibility())}
                 >
                   {isPasswordVisible ? (
                     <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
@@ -141,7 +141,7 @@ function SignUp() {
           </div>
         </div>
         <button
-          onClick={handleGoogleSingIn}
+          onClick={handleGoogleSignIn}
           className="w-full py-2 px-4 bg-black text-white font-medium font-poppins rounded-lg border border-white hover:border-mystic transition-colors duration-300 flex items-center justify-center"
         >
           <img src={google} alt="Google" className="h-5 w-5 mr-2" />
