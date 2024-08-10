@@ -2,12 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import dbService from "../services/dynamodb";
 import Error from "../pages/Error";
-import {
-  IconLayoutDashboardFilled,
-  IconBuildingWarehouse,
-} from "@tabler/icons-react";
 import ProfileSection from "../components/profile/ProfileSection";
 import Links from "../components/profile/Links";
+import Nav from "../components/profile/Nav"
 
 
 const Dashboard = () => {
@@ -38,6 +35,7 @@ const Dashboard = () => {
     <>
       <ProfileSection />
       <Links />
+      <Nav />
     </>
   ) : (
     <Error />
