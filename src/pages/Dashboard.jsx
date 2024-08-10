@@ -1,16 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import dbService from "../services/dynamodb";
+import Error from "../pages/Error";
+import {
+  IconLayoutDashboardFilled,
+  IconBuildingWarehouse,
+} from "@tabler/icons-react";
+import ProfileSection from "../components/profile/ProfileSection";
+import Links from "../components/profile/Links";
+
 
 const Dashboard = () => {
-  const {username} = useParams();
-  return (
+  const { username } = useParams();
+  const [userExists, setUserExists] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    //this will fetch all the details of the user if found in the database
+    const checkUsername = async () => {
+      try {
+        const awsResponse = await dbService.getUserData(username); //here awsResponse is an array with user details at index 0 and post details at index 1 and so on...
+        if (awsResponse[0].username === username) {
+          setIsLoading(false);
+          setUserExists(true);
+        } else {
+          setUserExists(false);
+        }
+      } catch (error) {
+        console.error("Error Checking username:", error);
+        setUserExists(false);
+      }
+    };
+
+    checkUsername();
+  }, [username]);
+
+  return userExists ? (
     <>
-      <div className="h-screen">
-        <div className="flex justify-center items-center h-screen">
-          <h1 className="font-kalnia text-white md:text-4xl">Hello {username[0].toUpperCase() + username.slice(1)} Your Dashbord Will Be Displayed Here In Near Future</h1>
-        </div>
-      </div>
+      <ProfileSection />
+      <Links />
     </>
+  ) : (
+    <Error />
   );
 };
 

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ErrorPopup from "../ui/ErrorPopup";
 import ResetPasswordPopup from "./ResetPasswordPopup";
 import useGoogleLogin from "../../hooks/useGoogleLogin";
+import dbService from "../../services/dynamodb";
 import {
   clearError,
   setError,
@@ -16,6 +17,7 @@ import {
   setUser,
 } from "../../feature/authSlice";
 import {
+  clearForm,
   setEmail,
   setPassword,
   togglePasswordVisibility,
@@ -31,6 +33,7 @@ function Login() {
   const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
   const [isResetPasswordPopupOpen, setIsResetPasswordPopupOpen] =
     useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   //Custom Hook
   const handleGoogleSignIn = useGoogleLogin(setIsErrorPopupOpen);
@@ -47,12 +50,23 @@ function Login() {
     e.preventDefault();
     dispatch(clearError(""));
     try {
+      setIsLoading(true);
       const response = await authService.login(email, password);
+
       if (response.providerId) {
         dispatch(setStatus(true));
         dispatch(setUser(response));
-        navigate("/auth/newuser");
-        // Redirect to the next page or perform any other necessary actions
+
+        const awsResponse = await dbService.getUserInfo(response.uid);
+        if (awsResponse.username) {
+          dispatch(clearForm());
+          navigate(`/${awsResponse.username}`);
+          setIsLoading(false);
+        }else{
+          //it means in response we reveive an error
+          dispatch(setError("Can't fetch the details try again later"))
+          setIsErrorPopupOpen(true);
+        }
       } else {
         dispatch(setError(response));
         setIsErrorPopupOpen(true);
@@ -61,6 +75,7 @@ function Login() {
       dispatch(setError(error));
       setIsErrorPopupOpen(true);
     }
+    setIsLoading(false);
   };
   return (
     <>
@@ -128,7 +143,8 @@ function Login() {
             <Button
               type="submit"
               color="primary"
-              className="w-full py-2 px-4 text-white font-poppins "
+              className="w-full py-2 px-4 text-white font-poppins"
+              isLoading={isLoading}
             >
               Login
             </Button>

@@ -1,16 +1,19 @@
+import React from "react";
 import { Button } from "@nextui-org/react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import MobileMenu from "./MobileMenu";
 
 function NavBar() {
   const navigate = useNavigate();
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full flex items-center justify-between px-4 py-2 md:px-40 text-white">
+      <nav className="sticky top-0 z-50 w-full flex items-center justify-between px-4 py-2 md:px-20 text-white bg-black">
         {/* Left side - Company name */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
+          <MobileMenu />
           <Link
             to="/"
-            className="md:text-5xl text-3xl font-kalnia font-normal text-mystic"
+            className="md:text-5xl text-4xl font-kalnia font-normal text-mystic"
           >
             LuxSwipe
           </Link>
@@ -18,13 +21,13 @@ function NavBar() {
 
         {/* Center - Section links */}
         <div className="hidden relative md:flex py-2 px-5">
-          <div className="absolute inset-0 bg-black/10 rounded-full border border-white/50 backdrop-blur-sm" />
-          <div className="relative flex justify-center items-center gap-3">
+          {/* <div className="absolute inset-0 bg-black/10 rounded-full border border-white/50 backdrop-blur-sm" /> */}
+          <div className="relative flex justify-center items-center gap-12">
             <NavLink
               to="/"
               className={({ isActive }) =>
-                `font-poppins text-sm hover:text-mystic duration-200 ${
-                  isActive ? "text-mystic" : "text-white"
+                `font-poppins text-base hover:text-mystic duration-200 ${
+                  isActive ? "text-mystic" : "text-mystic/50"
                 }`
               }
             >
@@ -33,8 +36,8 @@ function NavBar() {
             <NavLink
               to="/about"
               className={({ isActive }) =>
-                `font-poppins text-sm hover:text-mystic duration-200 ${
-                  isActive ? "text-mystic" : "text-white"
+                `font-poppins text-base hover:text-mystic duration-200 ${
+                  isActive ? "text-mystic" : "text-mystic/50"
                 }`
               }
             >
@@ -43,28 +46,16 @@ function NavBar() {
             <NavLink
               to="/contact-us"
               className={({ isActive }) =>
-                `font-poppins text-sm hover:text-mystic duration-200 ${
-                  isActive ? "text-mystic" : "text-white"
+                `font-poppins text-base hover:text-mystic duration-200 ${
+                  isActive ? "text-mystic" : "text-mystic/50"
                 }`
               }
             >
               Contact Us
             </NavLink>
-            <NavLink
-              to="/faq"
-              className={({ isActive }) =>
-                `font-poppins text-sm hover:text-mystic duration-200 ${
-                  isActive ? "text-mystic" : "text-white"
-                }`
-              }
-            >
-              FAQs
-            </NavLink>
           </div>
         </div>
-
-        {/* Right side - Login and Signup buttons */}
-        <div className="flex items-center">
+        <div className="hidden md:flex items-center">
           <Button
             color="primary"
             variant="light"

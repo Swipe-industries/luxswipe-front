@@ -18,6 +18,10 @@ export const authSlice = createSlice({
       state.user = action.payload;
     },
 
+    setEmailVerified: (state, action) => {
+      state.user.emailVerified = action.payload;
+    },
+
     setError: (state, action) => {
       state.error = action.payload;
     },
@@ -25,9 +29,20 @@ export const authSlice = createSlice({
     clearError: (state) => {
       state.error = "";
     },
+
+    clearUser: (state) => {
+      state.status = false,
+      state.user = null,
+      state.error = ""
+    },
   },
 });
 
-export const {setStatus, setUser, setError, clearError} = authSlice.actions; //these methods will be used by components to set data and state in store
+// Helper function to save user data to browser storage
+const saveUserToStorage = (user) => {
+  localStorage.setItem('user', JSON.stringify(user));
+};
+
+export const {setStatus, setUser, setError, clearError, clearUser, setEmailVerified, setUsername, setDisplayName} = authSlice.actions; //these methods will be used by components to set data and state in store
 
 export default authSlice.reducer;

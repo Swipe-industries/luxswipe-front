@@ -26,3 +26,4 @@ dist-ssr
 *Test.jsx
 .env
 *AuthLayout.jsx
+*PrivateRoute.jsx

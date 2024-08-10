@@ -31,15 +31,15 @@ function StickyScrollReveal({content, contentClassName}) {
   });
 
   const backgroundColors = [
-    "var(--red-700)",
+    "var(--yellow-600)",
     "var(--cyan-950)",
-    "var(--pink-900)",
+    "var(--amber-700)",
   ];
-  const linearGradients = [
-    "linear-gradient(to bottom right, var(--cyan-500), var(--emerald-500))",
-    "linear-gradient(to bottom right, var(--pink-500), var(--indigo-500))",
-    "linear-gradient(to bottom right, var(--pink--900), var(--pink-900))",
-  ];
+  // const linearGradients = [
+  //   "linear-gradient(to bottom right, var(--cyan-500), var(--emerald-500))",
+  //   "linear-gradient(to bottom right, var(--pink-500), var(--indigo-500))",
+  //   "linear-gradient(to bottom right, var(--pink--900), var(--pink-900))",
+  // ];
   return (
     <>
       <motion.div
@@ -83,11 +83,11 @@ function StickyScrollReveal({content, contentClassName}) {
           </div>
         </div>
         <motion.div
-          animate={{
-            background: linearGradients[activeCard % linearGradients.length],
-          }}
+          // animate={{
+          //   background: linearGradients[activeCard % linearGradients.length],
+          // }}
           className={cn(
-            "hidden md:block h-72 w-1/2 rounded-3xl bg-white sticky top-10 overflow-hidden",
+            "hidden md:block h-72 w-1/2 rounded-3xl sticky top-10 overflow-hidden",
             contentClassName
           )}
         >

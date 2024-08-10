@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.5",
     "@nextui-org/react": "^2.2.10",
     "@reduxjs/toolkit": "^2.2.3",
+    "@tabler/icons-react": "^3.11.0",
     "axios": "^1.6.7",
     "clsx": "^2.1.0",
     "firebase": "^10.10.0",

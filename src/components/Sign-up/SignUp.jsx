@@ -6,19 +6,23 @@ import { EyeFilledIcon } from "../ui/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../ui/EyeSlashFilledIcon";
 import ErrorPopup from "../ui/ErrorPopup";
 import authService from "../../services/firebase";
+import SuccessPopup from "../ui/SuccessPopup";
 import {
   setStatus,
   setUser,
   setError,
   clearError,
+  setEmailVerified,
 } from "../../feature/authSlice";
 import {
   setEmail,
   setPassword,
   togglePasswordVisibility,
+  clearForm,
 } from "../../feature/formSlice";
 import { useNavigate } from "react-router-dom";
 import useGoogleLogin from "../../hooks/useGoogleLogin";
+import EmailVerificationPopup from "../ui/EmailVerificationPopup";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -27,7 +31,11 @@ function SignUp() {
     (state) => state.form
   );
 
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [successPopup, setSuccessPopup] = useState(false);
+  const [emailVerificatioPopup, setEmailVarificationPopup] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   //Custom Hook
   const handleGoogleSignIn = useGoogleLogin(setIsPopupOpen);
@@ -42,14 +50,37 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(clearError(""));
+    dispatch(clearError());
+    setSuccessPopup(false);
     try {
+      setIsLoading(true);
       const response = await authService.createUser(email, password);
       if (response.providerId) {
         dispatch(setStatus(true));
         dispatch(setUser(response));
-        navigate("/auth/newuser");
-        // Redirect to the next page or perform any other necessary actions
+        // Open the popup for email verification
+        setEmailVarificationPopup(true);
+
+        const emailVerificationPromise = authService.verifyEmail();
+
+        // Wait for the email verification process to complete
+        const emailVerificationResult = await emailVerificationPromise;
+
+        if (emailVerificationResult === "Email Verification Link Sent") {
+          dispatch(setError(emailVerificationResult));
+          setSuccessPopup(true);
+        } else {
+          dispatch(setError("Can't Sign Up"));
+          setIsPopupOpen(true);
+        }
+
+        // Listen for email verification state changes
+        authService.monitorEmailVerification(() => {
+          dispatch(setEmailVerified(true));
+          dispatch(clearForm());
+          navigate("/auth/newuser", { state: { uid: response.uid } });
+          setIsLoading(false);
+        });
       } else {
         dispatch(setError(response));
         setIsPopupOpen(true);
@@ -58,11 +89,20 @@ function SignUp() {
       dispatch(setError(error));
       setIsPopupOpen(true);
     }
+    setIsLoading(false);
   };
 
   return (
     <div className="z-10 bg-black p-5 rounded-lg shadow-lg max-w-lg w-full">
+      <EmailVerificationPopup
+        onClose={() => setEmailVarificationPopup(false)}
+        isOpen={emailVerificatioPopup}
+      />
       <ErrorPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+      <SuccessPopup
+        isOpen={successPopup}
+        onClose={() => setSuccessPopup(false)}
+      />
       <div className="z-10 bg-black p-8 rounded-lg shadow-lg max-w-lg w-full">
         <h2 className="text-white font-kalnia font-light text-3xl mb-6">
           Create Account
@@ -113,6 +153,7 @@ function SignUp() {
             type="submit"
             color="primary"
             className="w-full text-white font-poppins rounded-lg"
+            isLoading = {isLoading}
           >
             Sign Up
           </Button>

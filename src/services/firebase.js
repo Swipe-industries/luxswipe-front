@@ -1,6 +1,7 @@
 import conf from "../conf/conf.js";
 import { initializeApp } from "firebase/app";
 import { formatErrorMessage } from "../utils/errorMessages.js";
+import {debounce} from "../utils/debounce.js"
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -8,6 +9,9 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  signOut,
+  sendEmailVerification,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -36,21 +40,7 @@ class AuthService {
         email,
         password
       );
-      const response = userCredential.user;
-      const userInfo = {
-        uid: response.uid,
-        username: "",
-        displayName: response.displayName,
-        email: response.email,
-        emailVerified: response.emailVerified,
-        photoURL: response.photoURL,
-        createdAt: response.metadata.createdAt,
-        lastLoginAt: response.metadata.lastLoginAt,
-        lastSignInTime: response.metadata.lastSignInTime,
-        creationTime: response.metadata.creationTime,
-        providerId: response.providerId,
-      };
-      return userInfo;
+      return this.getUserInfo(userCredential.user);
     } catch (error) {
       return formatErrorMessage(error.code);
     }
@@ -58,56 +48,100 @@ class AuthService {
 
   async googleSignin() {
     try {
-      const result = await signInWithPopup(this.auth, this.provider);
-      const response = result.user;
-      const userInfo = {
-        uid: response.uid,
-        username: "",
-        displayName: response.displayName,
-        email: response.email,
-        emailVerified: response.emailVerified,
-        photoURL: response.photoURL,
-        createdAt: response.metadata.createdAt,
-        lastLoginAt: response.metadata.lastLoginAt,
-        lastSignInTime: response.metadata.lastSignInTime,
-        creationTime: response.metadata.creationTime,
-        providerId: response.providerId,
-      };
-      return userInfo;
+      const userCredential = await signInWithPopup(this.auth, this.provider);
+      return this.getUserInfo(userCredential.user);
     } catch (error) {
       return formatErrorMessage(error.code);
     }
   }
 
-  async login(email, password){
-    try{
-      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      const response = userCredential.user;
-      const userInfo = {
-        uid: response.uid,
-        username: "",
-        displayName: response.displayName,
-        email: response.email,
-        emailVerified: response.emailVerified,
-        photoURL: response.photoURL,
-        createdAt: response.metadata.createdAt,
-        lastLoginAt: response.metadata.lastLoginAt,
-        lastSignInTime: response.metadata.lastSignInTime,
-        creationTime: response.metadata.creationTime,
-        providerId: response.providerId,
-      };
-      return userInfo;
-    }catch(error){
-      return formatErrorMessage(error.code)
+  async login(email, password) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+      return this.getUserInfo(userCredential.user)
+    } catch (error) {
+      return formatErrorMessage(error.code);
     }
   }
 
-  async resetPassword(email){
-    try{
-      await sendPasswordResetEmail(this.auth, email)
-      return "Password Reset Link Sent"
-    }catch(error){
-      return formatErrorMessage(error.code)
+  getUserInfo(user){
+    if(!user) return null;
+    
+    return {
+      uid: user.uid,
+      displayName: user.displayName,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      photoURL: user.photoURL,
+      createdAt: user.metadata.createdAt,
+      lastLoginAt: user.metadata.lastLoginAt,
+      lastSignInTime: user.metadata.lastSignInTime,
+      creationTime: user.metadata.creationTime,
+      providerId: user.providerId,
+    };
+  }
+
+  onAuthStateChanged(callback) {
+    return onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        user.reload().then(() => {
+          callback(user);
+        });
+      } else {
+        callback(null);
+      }
+    });
+  }
+
+  monitorEmailVerification(callback) {
+    const debounced = debounce(() => {
+      this.onAuthStateChanged((user) => {
+        if (user && user.emailVerified) {
+          callback();
+        } else {
+          this.monitorEmailVerification(callback);
+        }
+      });
+    }, 500); // Adjust the delay as needed
+
+    debounced();
+  }
+
+  async resetPassword(email) {
+    try {
+      await sendPasswordResetEmail(this.auth, email);
+      return "Password Reset Link Sent";
+    } catch (error) {
+      return formatErrorMessage(error.code);
+    }
+  }
+
+  async verifyEmail() {
+    try {
+      const currentUser = this.auth.currentUser;
+      if (currentUser) {
+        await sendEmailVerification(currentUser);
+        return new Promise((resolve) => {
+          resolve("Email Verification Link Sent");
+        });
+      } else {
+        return "No user is currently signed in";
+      }
+    } catch (error) {
+      return formatErrorMessage(error.code);
+    }
+  }
+
+  logout() {
+    try {
+      signOut(this.auth);
+      return "Logged out successfully";
+    } catch (error) {
+      return "An error occured";
     }
   }
 }

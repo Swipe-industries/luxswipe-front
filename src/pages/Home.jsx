@@ -33,9 +33,9 @@ function Home() {
           className="z-50 flex flex-col justify-center items-center"
         >
           <motion.p className="font-kalnia font-normal text-2xl md:text-5xl text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 py-4">
-            Empowering Fashion Influencers To <br /> Showcase Their Style
+            Empowering Fashion Influencers <br /> To Showcase Their Style
           </motion.p>
-          <div className="absolute bottom-0 mb-16">
+          <div className="absolute bottom-0 mb10">
             <SwipeIndicator />
           </div>
         </motion.div>

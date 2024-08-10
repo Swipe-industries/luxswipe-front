@@ -57,7 +57,6 @@ function SignUpModal({ onClose, openLogin, handleContainer }) {
         })
         .catch((error) => {
           // Handle errors
-          const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorMessage);
           // Optionally, you can display error messages to the user or handle them in other ways

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 function Maqsad() {
   return (
-    <div className="h-auto relative rounded-2xl p-10 mx-5  mb-5">
+    <div className="h-auto relative rounded-2xl p-10 mx-5 mb-5 bg-black/10 backdrop-blur-[1px]">
       <div className="flex justify-center gap-52 md:mb-8 mb-16">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
