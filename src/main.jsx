@@ -21,8 +21,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Login from "./components/Login/Login.jsx";
 import SignUp from "./pages/Signup.jsx";
 import NewUser from "./pages/NewUser.jsx";
-import Error from "./pages/Error.jsx";
-import PrivateRoute from "./components/PrivateRoute.jsx";
+import Error from "./pages/Error.jsx";s
 
 const router = createBrowserRouter(
   createRoutesFromElements(
