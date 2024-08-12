@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import authService from "../../services/firebase";
+import { clearUser } from "../../feature/authSlice";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const authStatus = useSelector((state) => state.auth.authStatus);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -22,6 +28,13 @@ const MobileMenu = () => {
       scale: 1.1,
       transition: { type: "spring", stiffness: 400, damping: 10 },
     },
+  };
+
+  const handleLogOut = () => {
+    authService.logout();
+    dispatch(clearUser())
+    navigate("/");
+    toggleMenu();
   };
 
   const MenuItem = ({ to, textColor, children }) => (
@@ -63,11 +76,28 @@ const MobileMenu = () => {
         className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40"
       >
         <div className="flex flex-col items-start justify-center h-full pl-8 gap-y-4">
-          <MenuItem to="/">Home</MenuItem>
-          <MenuItem to="/about">About</MenuItem>
-          <MenuItem to="/contact-us">Contact Us</MenuItem>
-          <MenuItem to="/auth/login" textColor="text-blue-500">Login</MenuItem>
-          <MenuItem to="/auth/signup" textColor="text-blue-500">Sign Up</MenuItem>
+          {authStatus ? (
+            <motion.button
+              whileHover="hover"
+              variants={menuItemVariants}
+              className="font-poppins text-xl text-danger-500 font-medium"
+              onClick={handleLogOut}
+            >
+              Log Out
+            </motion.button>
+          ) : (
+            <>
+              <MenuItem to="/">Home</MenuItem>
+              <MenuItem to="/about">About</MenuItem>
+              <MenuItem to="/contact-us">Contact Us</MenuItem>
+              <MenuItem to="/auth/login" textColor="text-blue-500">
+                Login
+              </MenuItem>
+              <MenuItem to="/auth/signup" textColor="text-blue-500">
+                Sign Up
+              </MenuItem>
+            </>
+          )}
         </div>
       </motion.div>
     </div>

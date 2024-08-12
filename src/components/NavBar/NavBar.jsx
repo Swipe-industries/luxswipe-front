@@ -1,10 +1,19 @@
 import React from "react";
-import { Button } from "@nextui-org/react";
+import { button, Button } from "@nextui-org/react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
+import { useSelector } from "react-redux";
+import { Avatar } from "@nextui-org/react";
+import authService from "../../services/firebase";
+import { useDispatch } from "react-redux";
+import { setAuthStatus } from "../../feature/authSlice";
 
 function NavBar() {
   const navigate = useNavigate();
+  const authStatus = useSelector((state) => state.auth.authStatus);
+  const dispatch  = useDispatch();
+  // const avatarURL = useSelector((state) => state.auth.user.photoURL);
+
   return (
     <>
       <nav className="sticky top-0 z-50 w-full flex items-center justify-between px-4 py-2 md:px-20 text-white bg-black">
@@ -22,7 +31,11 @@ function NavBar() {
         {/* Center - Section links */}
         <div className="hidden relative md:flex py-2 px-5">
           {/* <div className="absolute inset-0 bg-black/10 rounded-full border border-white/50 backdrop-blur-sm" /> */}
-          <div className="relative flex justify-center items-center gap-12">
+          <div
+            className={`${
+              authStatus ? "hidden" : "flex"
+            } relative justify-center items-center md:gap-12 gap-10`}
+          >
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -55,26 +68,32 @@ function NavBar() {
             </NavLink>
           </div>
         </div>
-        <div className="hidden md:flex items-center">
-          <Button
-            color="primary"
-            variant="light"
-            className="font-semibold mx-2 font-poppins"
-            size="sm"
-            onClick={() => navigate("/auth/login")}
-          >
-            Login
-          </Button>
+        {authStatus ? (
+          <button className="hidden md:flex" onClick={() => authService.logout() && dispatch(setAuthStatus(false))}> {/* create an onMouseEnter effect on this button to show modal to copy store link */}
+            <Avatar isBordered color="primary" src="" />
+          </button>
+        ) : (
+          <div className="hidden md:flex items-center">
+            <Button
+              color="primary"
+              variant="light"
+              className="font-semibold mx-2 font-poppins"
+              size="sm"
+              onClick={() => navigate("/auth/login")}
+            >
+              Login
+            </Button>
 
-          <Button
-            color="primary"
-            className="font-poppins font-medium text-white"
-            size="sm"
-            onClick={() => navigate("/auth/signup")}
-          >
-            Sign Up
-          </Button>
-        </div>
+            <Button
+              color="primary"
+              className="font-poppins font-medium text-white"
+              size="sm"
+              onClick={() => navigate("/auth/signup")}
+            >
+              Sign Up
+            </Button>
+          </div>
+        )}
       </nav>
     </>
   );

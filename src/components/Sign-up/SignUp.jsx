@@ -8,7 +8,7 @@ import ErrorPopup from "../ui/ErrorPopup";
 import authService from "../../services/firebase";
 import SuccessPopup from "../ui/SuccessPopup";
 import {
-  setStatus,
+  setAuthStatus,
   setUser,
   setError,
   clearError,
@@ -56,7 +56,7 @@ function SignUp() {
       setIsLoading(true);
       const response = await authService.createUser(email, password);
       if (response.providerId) {
-        dispatch(setStatus(true));
+        dispatch(setAuthStatus(true));
         dispatch(setUser(response));
         // Open the popup for email verification
         setEmailVarificationPopup(true);

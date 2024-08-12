@@ -1,7 +1,7 @@
 import conf from "../conf/conf.js";
 import { initializeApp } from "firebase/app";
 import { formatErrorMessage } from "../utils/errorMessages.js";
-import {debounce} from "../utils/debounce.js"
+import { debounce } from "../utils/debounce.js";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -27,6 +27,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+const SESSION_EXPIRY_DAYS = 2;
+
 class AuthService {
   constructor() {
     this.auth = auth;
@@ -40,7 +42,9 @@ class AuthService {
         email,
         password
       );
-      return this.getUserInfo(userCredential.user);
+      const userInfo = this.getUserInfo(userCredential.user);
+      this.saveUserSession(userInfo);
+      return userInfo;
     } catch (error) {
       return formatErrorMessage(error.code);
     }
@@ -49,7 +53,9 @@ class AuthService {
   async googleSignin() {
     try {
       const userCredential = await signInWithPopup(this.auth, this.provider);
-      return this.getUserInfo(userCredential.user);
+      const userInfo = this.getUserInfo(userCredential.user);
+      this.saveUserSession(userInfo);
+      return userInfo;
     } catch (error) {
       return formatErrorMessage(error.code);
     }
@@ -62,15 +68,17 @@ class AuthService {
         email,
         password
       );
-      return this.getUserInfo(userCredential.user)
+      const userInfo = this.getUserInfo(userCredential.user);
+      this.saveUserSession(userInfo);
+      return userInfo;
     } catch (error) {
       return formatErrorMessage(error.code);
     }
   }
 
-  getUserInfo(user){
-    if(!user) return null;
-    
+  getUserInfo(user) {
+    if (!user) return null;
+
     return {
       uid: user.uid,
       displayName: user.displayName,
@@ -83,6 +91,34 @@ class AuthService {
       creationTime: user.metadata.creationTime,
       providerId: user.providerId,
     };
+  }
+
+  
+  saveUserSession(userInfo) {
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + SESSION_EXPIRY_DAYS);
+
+    localStorage.setItem('user', JSON.stringify({
+      user: userInfo,
+      expiryDate: expiryDate.getTime()
+    }));
+  }
+
+  getCurrentUser() {
+    const userJson = localStorage.getItem('user');
+    if (!userJson) return null;
+
+    const userData = JSON.parse(userJson);
+    if (new Date().getTime() > userData.expiryDate) {
+      this.clearUserSession();
+      return null;
+    }
+
+    return userData.user;
+  }
+
+  clearUserSession() {
+    localStorage.removeItem('user');
   }
 
   onAuthStateChanged(callback) {
@@ -139,6 +175,7 @@ class AuthService {
   logout() {
     try {
       signOut(this.auth);
+      this.clearUserSession();
       return "Logged out successfully";
     } catch (error) {
       return "An error occured";

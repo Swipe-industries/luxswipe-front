@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  status: false,
+  authStatus: false,
   user: null,
   error: "",
 };
@@ -10,8 +10,8 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setStatus: (state, action) => {
-      state.status = action.payload;
+    setAuthStatus: (state, action) => {
+      state.authStatus = action.payload;
     },
 
     setUser: (state, action) => {
@@ -31,7 +31,7 @@ export const authSlice = createSlice({
     },
 
     clearUser: (state) => {
-      state.status = false,
+      state.authStatus = false,
       state.user = null,
       state.error = ""
     },
@@ -43,6 +43,6 @@ const saveUserToStorage = (user) => {
   localStorage.setItem('user', JSON.stringify(user));
 };
 
-export const {setStatus, setUser, setError, clearError, clearUser, setEmailVerified, setUsername, setDisplayName} = authSlice.actions; //these methods will be used by components to set data and state in store
+export const {setAuthStatus, setUser, setError, clearError, clearUser, setEmailVerified, setUsername, setDisplayName} = authSlice.actions; //these methods will be used by components to set data and state in store
 
 export default authSlice.reducer;

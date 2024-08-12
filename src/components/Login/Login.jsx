@@ -13,7 +13,7 @@ import dbService from "../../services/dynamodb";
 import {
   clearError,
   setError,
-  setStatus,
+  setAuthStatus,
   setUser,
 } from "../../feature/authSlice";
 import {
@@ -54,11 +54,11 @@ function Login() {
       const response = await authService.login(email, password);
 
       if (response.providerId) {
-        dispatch(setStatus(true));
         dispatch(setUser(response));
 
         const awsResponse = await dbService.getUserInfo(response.uid);
         if (awsResponse.username) {
+          dispatch(setAuthStatus(true));
           dispatch(clearForm());
           navigate(`/${awsResponse.username}`);
           setIsLoading(false);
