@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import authService from "../../services/firebase";
-import { clearUser } from "../../feature/authSlice";
+import UserProfilePopup from "../ui/UserProfilePopup";
+import LogoutPopup from "../ui/LogoutPopup";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLogoutPopupOpen, setIsLogoutPopupOpen] = useState(false);
   const authStatus = useSelector((state) => state.auth.authStatus);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -31,10 +30,8 @@ const MobileMenu = () => {
   };
 
   const handleLogOut = () => {
-    authService.logout();
-    dispatch(clearUser())
-    navigate("/");
-    toggleMenu();
+    setIsLogoutPopupOpen(true);
+    setIsOpen(false);
   };
 
   const MenuItem = ({ to, textColor, children }) => (
@@ -52,6 +49,8 @@ const MobileMenu = () => {
   );
 
   return (
+    <>
+    <LogoutPopup isOpen={isLogoutPopupOpen} onClose={setIsLogoutPopupOpen} />
     <div className="md:hidden">
       <button onClick={toggleMenu} className="z-50 relative">
         <motion.div
@@ -77,14 +76,22 @@ const MobileMenu = () => {
       >
         <div className="flex flex-col items-start justify-center h-full pl-8 gap-y-4">
           {authStatus ? (
-            <motion.button
-              whileHover="hover"
-              variants={menuItemVariants}
-              className="font-poppins text-xl text-danger-500 font-medium"
-              onClick={handleLogOut}
-            >
-              Log Out
-            </motion.button>
+            <>
+              <UserProfilePopup
+                isOpen={true}
+                onClose={() => setIsOpen(false)}
+                isMobile={true}
+                showLogoutBtn={false}
+              />
+              <motion.button
+                whileHover="hover"
+                variants={menuItemVariants}
+                className="font-poppins text-xl text-danger-500 font-medium"
+                onClick={handleLogOut}
+              >
+                Log Out
+              </motion.button>
+            </>
           ) : (
             <>
               <MenuItem to="/">Home</MenuItem>
@@ -101,6 +108,7 @@ const MobileMenu = () => {
         </div>
       </motion.div>
     </div>
+    </>
   );
 };
 

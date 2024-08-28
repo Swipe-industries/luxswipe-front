@@ -1,18 +1,36 @@
-import React from "react";
-import { button, Button } from "@nextui-org/react";
+import React, { useState } from "react";
+import { Button, Avatar } from "@nextui-org/react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
-import { useSelector } from "react-redux";
-import { Avatar } from "@nextui-org/react";
+import { useSelector, useDispatch } from "react-redux";
+import UserProfilePopup from "../ui/UserProfilePopup";
+import dbService from "../../services/dynamodb";
 import authService from "../../services/firebase";
-import { useDispatch } from "react-redux";
-import { setAuthStatus } from "../../feature/authSlice";
 
 function NavBar() {
   const navigate = useNavigate();
   const authStatus = useSelector((state) => state.auth.authStatus);
-  const dispatch  = useDispatch();
-  // const avatarURL = useSelector((state) => state.auth.user.photoURL);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const handlePopupClose = () => {
+    setIsPopupOpen(false);
+  };
+
+  const handleLogin = async () => {
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
+      try {
+        const response = await dbService.getUserInfo(currentUser.uid);
+        const username = response.username;
+        navigate(`/${username}`);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      navigate("/auth/login");
+    }
+  };
 
   return (
     <>
@@ -69,9 +87,17 @@ function NavBar() {
           </div>
         </div>
         {authStatus ? (
-          <button className="hidden md:flex" onClick={() => authService.logout() && dispatch(setAuthStatus(false))}> {/* create an onMouseEnter effect on this button to show modal to copy store link */}
-            <Avatar isBordered color="primary" src="" />
-          </button>
+          <div className="hidden md:flex">
+            <button onClick={() => setIsPopupOpen(true)}>
+              <Avatar src="" alt="" />
+            </button>
+            <UserProfilePopup
+              isOpen={isPopupOpen}
+              onClose={() => setIsPopupOpen(false)}
+              isMobile={false}
+              showLogoutBtn={true}
+            />
+          </div>
         ) : (
           <div className="hidden md:flex items-center">
             <Button
@@ -79,7 +105,7 @@ function NavBar() {
               variant="light"
               className="font-semibold mx-2 font-poppins"
               size="sm"
-              onClick={() => navigate("/auth/login")}
+              onClick={handleLogin}
             >
               Login
             </Button>

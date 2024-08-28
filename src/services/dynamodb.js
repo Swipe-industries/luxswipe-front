@@ -1,82 +1,93 @@
 import axios from "axios";
 import conf from "../conf/conf.js";
 
-
 const baseURL = conf.apiEndpoint;
 
 class DynamoDB {
-    constructor() {
-        this.baseURL = baseURL;
-    }
+  constructor() {
+    this.baseURL = baseURL;
+  }
 
-    async checkUsername(username) {
-        try {
-            const response = await axios.get(
-                `${baseURL}users/username/${username}`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            return response.data;
-        } catch (error) {
-            return error.code;
+  async checkUsername(username) {
+    try {
+      const response = await axios.get(
+        `${baseURL}/users/username/${username}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-    }    
-
-    async createUser(data, isAvailable){
-        if(isAvailable){
-            try{
-                const response = await axios.post(
-                    `${baseURL}/users/createuser`,
-                    data, //no curly brasis because data is already an object
-                    {
-                        headers: {
-                            "Content-Type": "application/json", 
-                        },
-                    }
-                );
-                return response.data;
-            }catch(error){
-                return error.code;
-            }
-        }else{
-            return "Username must be unique!"
-        }
+      );
+      return response.data;
+    } catch (error) {
+      return error.code;
     }
+  }
 
-    async getUserInfo(uid){
-        try{
-            const  response = await axios.get(
-                `${baseURL}users/uid/${uid}`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            return response.data;
-        }catch(error){
-            return error.code;
-        }
+  async createUser(data, isAvailable) {
+    if (isAvailable) {
+      try {
+        const response = await axios.post(
+          `${baseURL}/users/createuser`,
+          data, //no curly brasis because data is already an object
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        return response.data;
+      } catch (error) {
+        return error.code;
+      }
+    } else {
+      return "Username must be unique!";
     }
+  }
 
-    async getUserData(username){
-        try{
-            const response = await axios.get(
-                `${baseURL}users/getdata/${username}`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            return response.data; //returned value is an array with user details at index 0 and post details at index 1 and so one
-        }catch(error){
-            return error.code;
-        }
+  async getUserInfo(uid) {
+    try {
+      const response = await axios.get(`${baseURL}/users/uid/${uid}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return error.code;
     }
+  }
+
+  async getUserData(username) {
+    try {
+      const response = await axios.get(`${baseURL}/users/getdata/${username}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data; //returned value is an array with user details at index 0 and post details at index 1 and so one
+    } catch (error) {
+      return error.code;
+    }
+  }
+
+  async createNewLink(linkData) {
+    try {
+      const response = await axios.post(
+        `${baseURL}/links/createlink`,
+        linkData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return error.code;
+    }
+  }
 }
 
 const dbService = new DynamoDB();

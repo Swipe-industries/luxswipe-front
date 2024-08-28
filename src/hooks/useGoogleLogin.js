@@ -19,6 +19,7 @@ function useGoogleLogin(setIsPopupOpen) {
         dispatch(setAuthStatus(true));
         dispatch(setUser(response));
         if(response.uid === awsResponse.uid){ //it means existing user so log him in
+          authService.saveAwsSession(awsResponse);
           navigate(`/${awsResponse.username}`);
         }else{ // not existing user to redirect him to NewUser.jsx
           navigate("/auth/newuser", { state: { uid: response.uid } });

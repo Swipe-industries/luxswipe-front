@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "./VerticalMarquee.css";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
+import authService from "../../services/firebase";
+import dbService from "../../services/dynamodb";
 
 function Marquee({ children }) {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
 
   // Define the number of repetitions
   const repetitionCount = 1; // Adjust as needed
@@ -20,6 +23,21 @@ function Marquee({ children }) {
     },
     []
   );
+
+  const handleGetStarted = async () => {
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
+      try {
+        const response = await dbService.getUserInfo(currentUser.uid);
+        const username = response.username;
+        navigate(`/${username}`);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      navigate("/auth/signup");
+    }
+  };
   return (
     <>
       <div className="h-auto relative rounded-2xl p-10 mx-5 mb-5">
@@ -56,7 +74,7 @@ function Marquee({ children }) {
             variant="shadow"
             className="font-poppins text-white"
             size="lg"
-            onClick={() => navigate("/auth/signup")}
+            onClick={handleGetStarted}
           >
             Get Started
           </Button>

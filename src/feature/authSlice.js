@@ -38,11 +38,6 @@ export const authSlice = createSlice({
   },
 });
 
-// Helper function to save user data to browser storage
-const saveUserToStorage = (user) => {
-  localStorage.setItem('user', JSON.stringify(user));
-};
-
 export const {setAuthStatus, setUser, setError, clearError, clearUser, setEmailVerified, setUsername, setDisplayName} = authSlice.actions; //these methods will be used by components to set data and state in store
 
 export default authSlice.reducer;

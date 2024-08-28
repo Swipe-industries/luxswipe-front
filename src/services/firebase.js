@@ -27,7 +27,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const SESSION_EXPIRY_DAYS = 2;
+const SESSION_EXPIRY_DAYS = 20;
 
 class AuthService {
   constructor() {
@@ -72,6 +72,7 @@ class AuthService {
       this.saveUserSession(userInfo);
       return userInfo;
     } catch (error) {
+      
       return formatErrorMessage(error.code);
     }
   }
@@ -104,6 +105,16 @@ class AuthService {
     }));
   }
 
+  saveAwsSession(awsResponse) {
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + SESSION_EXPIRY_DAYS);
+
+    localStorage.setItem('aws', JSON.stringify({
+      user: awsResponse,
+      expiryDate: expiryDate.getTime()
+    }));
+  }
+
   getCurrentUser() {
     const userJson = localStorage.getItem('user');
     if (!userJson) return null;
@@ -117,8 +128,22 @@ class AuthService {
     return userData.user;
   }
 
+  getAwsUser() {
+    const userJson = localStorage.getItem('aws');
+    if (!userJson) return null;
+
+    const userData = JSON.parse(userJson);
+    if (new Date().getTime() > userData.expiryDate) {
+      this.clearUserSession();
+      return null;
+    }
+
+    return userData.user;
+  }
+
   clearUserSession() {
     localStorage.removeItem('user');
+    localStorage.removeItem('aws');
   }
 
   onAuthStateChanged(callback) {

@@ -58,6 +58,7 @@ function Login() {
 
         const awsResponse = await dbService.getUserInfo(response.uid);
         if (awsResponse.username) {
+          authService.saveAwsSession(awsResponse);
           dispatch(setAuthStatus(true));
           dispatch(clearForm());
           navigate(`/${awsResponse.username}`);

@@ -61,6 +61,7 @@ function NewUser() {
     e.preventDefault();
     const awsResponse = await dbService.createUser(userData, isAvailable);
     if (awsResponse.message) {
+      authService.saveAwsSession(awsResponse.user);
       navigate(`/${awsResponse.user.username}`);
     } else {
       dispatch(setError(awsResponse));

@@ -17,7 +17,7 @@ const Nav = () => {
   const [activeTab, setActiveTab] = useState('grid');
 
   return (
-    <div className="bg-black text-white">
+    <div className="bg-black text-white pt-4">
       <div className="max-w-4xl mx-auto">
         <nav className="flex ">
           <NavTab
