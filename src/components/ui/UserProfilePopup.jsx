@@ -18,7 +18,7 @@ const UserProfilePopup = ({
 
   const userData  = authService.getAwsUser();
   
-  const username = userData.username;
+  const username = userData?.username;
   const avatarSrc = "";
   const storeLink = `luxswipe.in/${username}`;
 

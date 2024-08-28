@@ -3,9 +3,10 @@ import { Input } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { setDisplayName, setError } from "../feature/authSlice";
+import { setError } from "../feature/authSlice";
 import ErrorPopup from "../components/ui/ErrorPopup";
 import dbService from "../services/dynamodb";
+import authService from "../services/firebase.js"
 
 function NewUser() {
   const navigate = useNavigate();
