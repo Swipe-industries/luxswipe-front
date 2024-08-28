@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import { Button, Avatar } from "@nextui-org/react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
 import { useSelector, useDispatch } from "react-redux";
 import UserProfilePopup from "../ui/UserProfilePopup";
-import dbService from "../../services/dynamodb";
-import authService from "../../services/firebase";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -15,21 +13,6 @@ function NavBar() {
 
   const handlePopupClose = () => {
     setIsPopupOpen(false);
-  };
-
-  const handleLogin = async () => {
-    const currentUser = authService.getCurrentUser();
-    if (currentUser) {
-      try {
-        const response = await dbService.getUserInfo(currentUser.uid);
-        const username = response.username;
-        navigate(`/${username}`);
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      navigate("/auth/login");
-    }
   };
 
   return (
@@ -88,8 +71,11 @@ function NavBar() {
         </div>
         {authStatus ? (
           <div className="hidden md:flex">
-            <button onClick={() => setIsPopupOpen(true)}>
-              <Avatar src="" alt="" />
+            <button
+              onClick={() => setIsPopupOpen(true)}
+              
+            >
+              <Avatar src="" alt=""/>
             </button>
             <UserProfilePopup
               isOpen={isPopupOpen}
@@ -105,7 +91,7 @@ function NavBar() {
               variant="light"
               className="font-semibold mx-2 font-poppins"
               size="sm"
-              onClick={handleLogin}
+              onClick={() => navigate("/auth/login")}
             >
               Login
             </Button>
