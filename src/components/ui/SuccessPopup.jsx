@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const SuccessPopup = ({ isOpen, onClose }) => {
-  const dispatch = useDispatch();
-  const message = useSelector((state) => state.error);
+  const message = useSelector((state) => state.auth.error);
   const autoCloseDelay = 2000;
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  status: false,
+  authStatus: false,
   user: null,
   error: "",
 };
@@ -10,12 +10,16 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setStatus: (state, action) => {
-      state.status = action.payload;
+    setAuthStatus: (state, action) => {
+      state.authStatus = action.payload;
     },
 
     setUser: (state, action) => {
       state.user = action.payload;
+    },
+
+    setEmailVerified: (state, action) => {
+      state.user.emailVerified = action.payload;
     },
 
     setError: (state, action) => {
@@ -25,9 +29,15 @@ export const authSlice = createSlice({
     clearError: (state) => {
       state.error = "";
     },
+
+    clearUser: (state) => {
+      state.authStatus = false,
+      state.user = null,
+      state.error = ""
+    },
   },
 });
 
-export const {setStatus, setUser, setError, clearError} = authSlice.actions; //these methods will be used by components to set data and state in store
+export const {setAuthStatus, setUser, setError, clearError, clearUser, setEmailVerified, setUsername, setDisplayName} = authSlice.actions; //these methods will be used by components to set data and state in store
 
 export default authSlice.reducer;

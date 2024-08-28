@@ -1,5 +1,7 @@
 import conf from "../conf/conf.js";
 import { initializeApp } from "firebase/app";
+import { formatErrorMessage } from "../utils/errorMessages.js";
+import { debounce } from "../utils/debounce.js";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -7,6 +9,9 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  signOut,
+  sendEmailVerification,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -22,20 +27,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-//function to customise the error message
-function formatErrorMessage(errorString) {
-  // Remove "auth/" from the string
-  errorString = errorString.replace("auth/", "");
-
-  // Replace "-" with a space
-  errorString = errorString.replace(/-/g, " ");
-
-  // Capitalize the first letter of each word
-  errorString = errorString.replace(/\b\w/g, (char) => {
-    return char.toUpperCase();
-  });
-  return errorString;
-}
+const SESSION_EXPIRY_DAYS = 20;
 
 class AuthService {
   constructor() {
@@ -50,19 +42,8 @@ class AuthService {
         email,
         password
       );
-      const response = userCredential.user;
-      const userInfo = {
-        uid: response.uid,
-        displayName: response.displayName,
-        email: response.email,
-        emailVerified: response.emailVerified,
-        photoURL: response.photoURL,
-        createdAt: response.metadata.createdAt,
-        lastLoginAt: response.metadata.lastLoginAt,
-        lastSignInTime: response.metadata.lastSignInTime,
-        creationTime: response.metadata.creationTime,
-        providerId: response.providerId,
-      };
+      const userInfo = this.getUserInfo(userCredential.user);
+      this.saveUserSession(userInfo);
       return userInfo;
     } catch (error) {
       return formatErrorMessage(error.code);
@@ -71,54 +52,158 @@ class AuthService {
 
   async googleSignin() {
     try {
-      const result = await signInWithPopup(this.auth, this.provider);
-      const response = result.user;
-      const userInfo = {
-        uid: response.uid,
-        displayName: response.displayName,
-        email: response.email,
-        emailVerified: response.emailVerified,
-        photoURL: response.photoURL,
-        createdAt: response.metadata.createdAt,
-        lastLoginAt: response.metadata.lastLoginAt,
-        lastSignInTime: response.metadata.lastSignInTime,
-        creationTime: response.metadata.creationTime,
-        providerId: response.providerId,
-      };
+      const userCredential = await signInWithPopup(this.auth, this.provider);
+      const userInfo = this.getUserInfo(userCredential.user);
+      this.saveUserSession(userInfo);
       return userInfo;
     } catch (error) {
       return formatErrorMessage(error.code);
     }
   }
 
-  async login(email, password){
-    try{
-      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      const response = userCredential.user;
-      const userInfo = {
-        uid: response.uid,
-        displayName: response.displayName,
-        email: response.email,
-        emailVerified: response.emailVerified,
-        photoURL: response.photoURL,
-        createdAt: response.metadata.createdAt,
-        lastLoginAt: response.metadata.lastLoginAt,
-        lastSignInTime: response.metadata.lastSignInTime,
-        creationTime: response.metadata.creationTime,
-        providerId: response.providerId,
-      };
+  async login(email, password) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+      const userInfo = this.getUserInfo(userCredential.user);
+      this.saveUserSession(userInfo);
       return userInfo;
-    }catch(error){
-      return formatErrorMessage(error.code)
+    } catch (error) {
+      
+      return formatErrorMessage(error.code);
     }
   }
 
-  async resetPassword(email){
-    try{
-      await sendPasswordResetEmail(this.auth, email)
-      return "Password Reset Link Sent"
-    }catch(error){
-      return formatErrorMessage(error.code)
+  getUserInfo(user) {
+    if (!user) return null;
+
+    return {
+      uid: user.uid,
+      displayName: user.displayName,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      photoURL: user.photoURL,
+      createdAt: user.metadata.createdAt,
+      lastLoginAt: user.metadata.lastLoginAt,
+      lastSignInTime: user.metadata.lastSignInTime,
+      creationTime: user.metadata.creationTime,
+      providerId: user.providerId,
+    };
+  }
+
+  
+  saveUserSession(userInfo) {
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + SESSION_EXPIRY_DAYS);
+
+    localStorage.setItem('user', JSON.stringify({
+      user: userInfo,
+      expiryDate: expiryDate.getTime()
+    }));
+  }
+
+  saveAwsSession(awsResponse) {
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + SESSION_EXPIRY_DAYS);
+
+    localStorage.setItem('aws', JSON.stringify({
+      user: awsResponse,
+      expiryDate: expiryDate.getTime()
+    }));
+  }
+
+  getCurrentUser() {
+    const userJson = localStorage.getItem('user');
+    if (!userJson) return null;
+
+    const userData = JSON.parse(userJson);
+    if (new Date().getTime() > userData.expiryDate) {
+      this.clearUserSession();
+      return null;
+    }
+
+    return userData.user;
+  }
+
+  getAwsUser() {
+    const userJson = localStorage.getItem('aws');
+    if (!userJson) return null;
+
+    const userData = JSON.parse(userJson);
+    if (new Date().getTime() > userData.expiryDate) {
+      this.clearUserSession();
+      return null;
+    }
+
+    return userData.user;
+  }
+
+  clearUserSession() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('aws');
+  }
+
+  onAuthStateChanged(callback) {
+    return onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        user.reload().then(() => {
+          callback(user);
+        });
+      } else {
+        callback(null);
+      }
+    });
+  }
+
+  monitorEmailVerification(callback) {
+    const debounced = debounce(() => {
+      this.onAuthStateChanged((user) => {
+        if (user && user.emailVerified) {
+          callback();
+        } else {
+          this.monitorEmailVerification(callback);
+        }
+      });
+    }, 500); // Adjust the delay as needed
+
+    debounced();
+  }
+
+  async resetPassword(email) {
+    try {
+      await sendPasswordResetEmail(this.auth, email);
+      return "Password Reset Link Sent";
+    } catch (error) {
+      return formatErrorMessage(error.code);
+    }
+  }
+
+  async verifyEmail() {
+    try {
+      const currentUser = this.auth.currentUser;
+      if (currentUser) {
+        await sendEmailVerification(currentUser);
+        return new Promise((resolve) => {
+          resolve("Email Verification Link Sent");
+        });
+      } else {
+        return "No user is currently signed in";
+      }
+    } catch (error) {
+      return formatErrorMessage(error.code);
+    }
+  }
+
+  logout() {
+    try {
+      signOut(this.auth);
+      this.clearUserSession();
+      return "Logged out successfully";
+    } catch (error) {
+      return "An error occured";
     }
   }
 }

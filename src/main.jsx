@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import store from "./store.js";
+import { store } from "./store.js";
 import { Provider } from "react-redux";
 import Root from "./Root.jsx";
 import Layout from "./Layout.jsx";
+// import PrivateRoute from "./components/PrivateRoute.jsx";
 import "./index.css";
 import { NextUIProvider } from "@nextui-org/react";
 import {
@@ -30,14 +31,16 @@ const router = createBrowserRouter(
         <Route path="about" element={<About />} />
         <Route path="contact-us" element={<Error />} />
         <Route path="faq" element={<Error />} />
-        <Route path=":username" element={<Error />} />
+        <Route path=":username" element={<Dashboard />} />
       </Route>
 
       <Route path="/auth" element={<Layout />}>
         <Route path="" element={<Home />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="login" element={<Login />} />
-        <Route path="newuser" element={<NewUser />} />
+        {/* <Route element={<PrivateRoute />}> */}
+          <Route path="newuser" element={<NewUser />} />
+        {/* </Route> */}
       </Route>
     </>
   )

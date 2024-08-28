@@ -1,55 +1,86 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Input, Button } from "@nextui-org/react";
 import google from "../../assets/google.svg";
 import { EyeFilledIcon } from "../ui/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../ui/EyeSlashFilledIcon";
 import ErrorPopup from "../ui/ErrorPopup";
 import authService from "../../services/firebase";
+import SuccessPopup from "../ui/SuccessPopup";
 import {
-  setStatus,
+  setAuthStatus,
   setUser,
   setError,
   clearError,
+  setEmailVerified,
 } from "../../feature/authSlice";
+import {
+  setEmail,
+  setPassword,
+  togglePasswordVisibility,
+  clearForm,
+} from "../../feature/formSlice";
 import { useNavigate } from "react-router-dom";
 import useGoogleLogin from "../../hooks/useGoogleLogin";
+import EmailVerificationPopup from "../ui/EmailVerificationPopup";
 
 function SignUp() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { email, password, isPasswordVisible } = useSelector(
+    (state) => state.form
+  );
+
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [successPopup, setSuccessPopup] = useState(false);
+  const [emailVerificatioPopup, setEmailVarificationPopup] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   //Custom Hook
-  const handleGoogleSingIn = useGoogleLogin(setIsPopupOpen);
-
-  const togglePasswordVisibility = () =>
-    setIsPasswordVisible(!isPasswordVisible);
+  const handleGoogleSignIn = useGoogleLogin(setIsPopupOpen);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "email") {
+      dispatch(setEmail(e.target.value));
+    } else {
+      dispatch(setPassword(e.target.value));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(clearError(""));
+    dispatch(clearError());
+    setSuccessPopup(false);
     try {
-      const response = await authService.createUser(
-        formData.email,
-        formData.password
-      );
+      setIsLoading(true);
+      const response = await authService.createUser(email, password);
       if (response.providerId) {
-        dispatch(setStatus(true));
+        dispatch(setAuthStatus(true));
         dispatch(setUser(response));
-        navigate("/auth/newuser");
-        // Redirect to the next page or perform any other necessary actions
+        // Open the popup for email verification
+        setEmailVarificationPopup(true);
+
+        const emailVerificationPromise = authService.verifyEmail();
+
+        // Wait for the email verification process to complete
+        const emailVerificationResult = await emailVerificationPromise;
+
+        if (emailVerificationResult === "Email Verification Link Sent") {
+          dispatch(setError(emailVerificationResult));
+          setSuccessPopup(true);
+        } else {
+          dispatch(setError("Can't Sign Up"));
+          setIsPopupOpen(true);
+        }
+
+        // Listen for email verification state changes
+        authService.monitorEmailVerification(() => {
+          dispatch(setEmailVerified(true));
+          dispatch(clearForm());
+          navigate("/auth/newuser", { state: { uid: response.uid } });
+          setIsLoading(false);
+        });
       } else {
         dispatch(setError(response));
         setIsPopupOpen(true);
@@ -58,11 +89,20 @@ function SignUp() {
       dispatch(setError(error));
       setIsPopupOpen(true);
     }
+    setIsLoading(false);
   };
 
   return (
     <div className="z-10 bg-black p-5 rounded-lg shadow-lg max-w-lg w-full">
+      <EmailVerificationPopup
+        onClose={() => setEmailVarificationPopup(false)}
+        isOpen={emailVerificatioPopup}
+      />
       <ErrorPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+      <SuccessPopup
+        isOpen={successPopup}
+        onClose={() => setSuccessPopup(false)}
+      />
       <div className="z-10 bg-black p-8 rounded-lg shadow-lg max-w-lg w-full">
         <h2 className="text-white font-kalnia font-light text-3xl mb-6">
           Create Account
@@ -95,7 +135,7 @@ function SignUp() {
                 <button
                   className="focus:outline-none"
                   type="button"
-                  onClick={togglePasswordVisibility}
+                  onClick={() => dispatch(togglePasswordVisibility())}
                 >
                   {isPasswordVisible ? (
                     <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
@@ -113,6 +153,7 @@ function SignUp() {
             type="submit"
             color="primary"
             className="w-full text-white font-poppins rounded-lg"
+            isLoading = {isLoading}
           >
             Sign Up
           </Button>
@@ -141,7 +182,7 @@ function SignUp() {
           </div>
         </div>
         <button
-          onClick={handleGoogleSingIn}
+          onClick={handleGoogleSignIn}
           className="w-full py-2 px-4 bg-black text-white font-medium font-poppins rounded-lg border border-white hover:border-mystic transition-colors duration-300 flex items-center justify-center"
         >
           <img src={google} alt="Google" className="h-5 w-5 mr-2" />

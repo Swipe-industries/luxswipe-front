@@ -2,20 +2,21 @@ import React from "react";
 import logo from "../../assets/Logo.svg";
 import building from "../../assets/buildings-fill.svg";
 import location from "../../assets/Location.svg";
-import contact from "../../assets/contact.svg";
 import mail from "../../assets/Mail.svg";
 import phone from "../../assets/Phone.svg";
 import linkedin from "../../assets/linkedin.svg";
 import instagram from "../../assets/instagram.svg";
 import youtube from "../../assets/youtube.svg";
-import { NavLink, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function Footer() {
+  const { username } = useParams();
   return (
     <>
       <div
         id="footer"
-        className="flex flex-col bg-mystic shadow-sm justify-center items-center w-full md:h-auto"
+        className={(`${username ? "hidden" : null} flex flex-col bg-mystic shadow-sm justify-center items-center w-full md:h-auto`)}
       >
         
         <div className="mt-auto flex pt-10">
@@ -99,21 +100,6 @@ function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-5 font-poppins font-medium text-xs flex items-center justify-center gap-4 text-black">
-          {/* <NavLink to="/" className={`hover:text-white`}>
-            Home
-          </NavLink> */}
-          <NavLink to="/about" className={`hover:text-white underline`}>
-            About
-          </NavLink>
-          <NavLink to="/contact-us" className={`hover:text-white underline`}>
-            Contact Us
-          </NavLink>
-          <NavLink to="/faq" className={`hover:text-white underline`}>
-            FAQs
-          </NavLink>
-        </div>
-
         <div className="flex mx-auto text-xs font-medium md:text-sm mt-6 mb-6 font-poppins">
           <span>
             © 2024 Swipe Industries Private Limited, All Rights Reserved
@@ -130,9 +116,9 @@ export default Footer;
   /* <div className="container mx-auto flex flex-wrap justify-center my-5">
   {/*  Logo */
 }
-<div className="footer-column mb-4 lg:w-1/4 lg:mb-10">
+{/* <div className="footer-column mb-4 lg:w-1/4 lg:mb-10">
   <img src={logo} alt="Logo" className="lg:w-24 w-16" />
-</div>;
+</div>; */}
 {
   /* <!-- Navigation Links --> 
   <div className="footer-column mb-4 lg:w-1/4 lg:mb-0 mx-5">

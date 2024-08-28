@@ -5,53 +5,69 @@ import { EyeFilledIcon } from "../ui/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../ui/EyeSlashFilledIcon";
 import { useNavigate, Link } from "react-router-dom";
 import authService from "../../services/firebase";
-import { useDispatch } from "react-redux";
-import {
-  clearError,
-  setError,
-  setStatus,
-  setUser,
-} from "../../feature/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 import ErrorPopup from "../ui/ErrorPopup";
 import ResetPasswordPopup from "./ResetPasswordPopup";
 import useGoogleLogin from "../../hooks/useGoogleLogin";
+import dbService from "../../services/dynamodb";
+import {
+  clearError,
+  setError,
+  setAuthStatus,
+  setUser,
+} from "../../feature/authSlice";
+import {
+  clearForm,
+  setEmail,
+  setPassword,
+  togglePasswordVisibility,
+} from "../../feature/formSlice";
 
 function Login() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { email, password, isPasswordVisible } = useSelector(
+    (state) => state.form
+  );
+
   const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
   const [isResetPasswordPopupOpen, setIsResetPasswordPopupOpen] =
     useState(false);
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   //Custom Hook
-  const handleGoogleSingIn = useGoogleLogin(setIsErrorPopupOpen);
-
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const togglePasswordVisibility = () =>
-    setIsPasswordVisible(!isPasswordVisible);
+  const handleGoogleSignIn = useGoogleLogin(setIsErrorPopupOpen);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "email") {
+      dispatch(setEmail(e.target.value));
+    } else {
+      dispatch(setPassword(e.target.value));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(clearError(""));
     try {
-      const response = await authService.login(
-        formData.email,
-        formData.password
-      );
+      setIsLoading(true);
+      const response = await authService.login(email, password);
+
       if (response.providerId) {
-        dispatch(setStatus(true));
         dispatch(setUser(response));
-        navigate("/auth/newuser");
-        // Redirect to the next page or perform any other necessary actions
+
+        const awsResponse = await dbService.getUserInfo(response.uid);
+        if (awsResponse.username) {
+          authService.saveAwsSession(awsResponse);
+          dispatch(setAuthStatus(true));
+          dispatch(clearForm());
+          navigate(`/${awsResponse.username}`);
+          setIsLoading(false);
+        }else{
+          //it means in response we reveive an error
+          dispatch(setError("Can't fetch the details try again later"))
+          setIsErrorPopupOpen(true);
+        }
       } else {
         dispatch(setError(response));
         setIsErrorPopupOpen(true);
@@ -60,6 +76,7 @@ function Login() {
       dispatch(setError(error));
       setIsErrorPopupOpen(true);
     }
+    setIsLoading(false);
   };
   return (
     <>
@@ -68,7 +85,10 @@ function Login() {
           isOpen={isErrorPopupOpen}
           onClose={() => setIsErrorPopupOpen(false)}
         />
-        <ResetPasswordPopup isOpen={isResetPasswordPopupOpen} onClose={()=> setIsResetPasswordPopupOpen(false)} />
+        <ResetPasswordPopup
+          isOpen={isResetPasswordPopupOpen}
+          onClose={() => setIsResetPasswordPopupOpen(false)}
+        />
         <div className="z-10 bg-black p-8 rounded-lg shadow-lg max-w-md w-full">
           <h2 className="text-white font-kalnia font-light text-3xl mb-6">
             Login
@@ -100,7 +120,7 @@ function Login() {
                   <button
                     className="focus:outline-none"
                     type="button"
-                    onClick={togglePasswordVisibility}
+                    onClick={() => dispatch(togglePasswordVisibility())}
                   >
                     {isPasswordVisible ? (
                       <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
@@ -124,7 +144,8 @@ function Login() {
             <Button
               type="submit"
               color="primary"
-              className="w-full py-2 px-4 text-white font-poppins "
+              className="w-full py-2 px-4 text-white font-poppins"
+              isLoading={isLoading}
             >
               Login
             </Button>
@@ -153,7 +174,10 @@ function Login() {
               <span className="bg-black px-4 font-poppins text-sm">Or</span>
             </div>
           </div>
-          <button onClick={handleGoogleSingIn} className="w-full py-2 px-4 bg-black text-white font-medium font-poppins rounded-lg border border-white hover:border-mystic transition-colors duration-300 flex items-center justify-center">
+          <button
+            onClick={handleGoogleSignIn}
+            className="w-full py-2 px-4 bg-black text-white font-medium font-poppins rounded-lg border border-white hover:border-mystic transition-colors duration-300 flex items-center justify-center"
+          >
             <img src={google} alt="Google" className="h-5 w-5 mr-2" />
             Continue with Google
           </button>
