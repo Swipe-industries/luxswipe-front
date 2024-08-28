@@ -35,9 +35,7 @@ const Dashboard = () => {
         // const userDataFromDB = response[0]; //now no need of this thing
 
         if (response && response.length > 0) {
-          const userProfile = response.find(
-            (item) => !item.SK.startsWith("PROFILELINK")
-          );
+          const userProfile = response.find(item => !item.SK.startsWith("PROFILELINK"));
 
           if (userProfile && userProfile.username === username) {
             setUserData(userProfile);
