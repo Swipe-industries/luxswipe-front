@@ -65,12 +65,12 @@ function Footer() {
               </p>
             </div>
 
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <img className="scale-125" src={phone} alt="phone logo svg" />
               <p className="font-poppins py-2 text-sm text-base-1 ml-2">
                 +91 80575 66303
               </p>
-            </div>
+            </div> */}
 
             <div className="flex items-center my-2">
               <Link to="https://www.linkedin.com/company/luxswipe/?viewAsMember=true">
@@ -84,7 +84,7 @@ function Footer() {
               <Link to="https://www.instagram.com/lux_swipe/">
                 {" "}
                 <img
-                  className="px-2 hover:scale-110 scale-125"
+                  className="px-3 hover:scale-110 scale-125"
                   src={instagram}
                   alt="Instagram logo"
                 />
