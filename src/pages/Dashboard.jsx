@@ -89,7 +89,7 @@ const Dashboard = () => {
       {isLoading && <LoadingState />}
       {!isLoading && userExists && userData && (
         <>
-          <ProfileSection apiData={userData} />
+          <ProfileSection isUser={isUser} userData={userData} />
           {(linkData.length > 0 || isUser) && <Links isUser={isUser} userData={userData} linkDataProp={linkData} />}
           {postData.length > 0 && <Nav />}
         </>
