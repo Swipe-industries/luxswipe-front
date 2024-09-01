@@ -10,7 +10,7 @@ import mediaUploadService from "../../services/imagekit.js";
 
 function ProfileEditPopup({ currentData, setIsPopupOpen, onSave }) {
   const [formData, setFormData] = useState({
-    avatarPreview: currentData?.avatarUrl || null,
+    avatarPreview: currentData?.avatarURL || null,
     coverPreview:
       currentData?.coverUrl ||
       "https://ik.imagekit.io/luxswipe/version-2.0/Cover%20Image.jpg?updatedAt=1724828324583",
