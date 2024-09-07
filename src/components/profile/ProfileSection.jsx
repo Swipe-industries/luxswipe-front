@@ -5,41 +5,42 @@ import ProfileEditPopup from "../ui/ProfileEditPopup";
 import dbService from "../../services/dynamodb";
 
 function ProfileSection({ isUser, userData: initialUserData }) {
-
   const [userData, setUserData] = useState(initialUserData);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [message, setMessage] = useState("");
-  
 
   const updateProfile = async ({ name, bio, avatarUrl, coverUrl }) => {
     setUserData((prevUserData) => ({
       ...prevUserData,
       name: name !== prevUserData.name ? name : prevUserData.name,
       bio: bio !== prevUserData.bio ? bio : prevUserData.bio,
-      avatarUrl: avatarUrl !== prevUserData.avatarUrl ? avatarUrl : prevUserData.avatarUrl,
-      coverUrl: coverUrl !== prevUserData.coverUrl ? coverUrl : prevUserData.coverUrl
+      avatarUrl:
+        avatarUrl !== prevUserData.avatarUrl
+          ? avatarUrl
+          : prevUserData.avatarUrl,
+      coverUrl:
+        coverUrl !== prevUserData.coverUrl ? coverUrl : prevUserData.coverUrl,
     }));
 
     const newData = {
       name: name,
       bio: bio,
       avatarUrl: avatarUrl,
-      coverUrl: coverUrl
-    }
-    try{
-      const response = await dbService.updateUser(userData.username, newData )
-      
-      if (response.data){
-        setMessage("Data updated successfully")
-      }else{
-        setMessage("Unable to update data, try again")
+      coverUrl: coverUrl,
+    };
+    try {
+      const response = await dbService.updateUser(userData.username, newData);
+
+      if (response.data) {
+        setMessage("Data updated successfully");
+      } else {
+        setMessage("Unable to update data, try again");
       }
-    }catch(error){
-      alert("There was an error updating the Profile. Please try again.")
+    } catch (error) {
+      alert("There was an error updating the Profile. Please try again.");
     }
   };
-  
-  
+
   return (
     <>
       {isEditProfileOpen && (
@@ -54,7 +55,10 @@ function ProfileSection({ isUser, userData: initialUserData }) {
           {/* Cover Photo */}
           <div className="relative h-48 md:h-64 lg:h-80 overflow-hidden">
             <img
-              src={userData?.coverUrl || "https://ik.imagekit.io/luxswipe/version-2.0/Cover%20Image.jpg?updatedAt=1724828324583"}
+              src={
+                userData?.coverUrl ||
+                "https://ik.imagekit.io/luxswipe/version-2.0/Cover%20Image.jpg?updatedAt=1724828324583"
+              }
               alt="Cover"
               className="w-full h-full object-cover"
             />
@@ -66,6 +70,7 @@ function ProfileSection({ isUser, userData: initialUserData }) {
               {/* Profile Picture */}
               <div className="relative md:flex">
                 <Avatar
+                  isBordered
                   src={userData?.avatarUrl}
                   className="md:w-40 md:h-40 aspect-square w-28 h-28"
                 />

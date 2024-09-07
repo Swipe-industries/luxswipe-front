@@ -4,6 +4,8 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
 import { useSelector, useDispatch } from "react-redux";
 import UserProfilePopup from "../ui/UserProfilePopup";
+import authService from "../../services/firebase";
+import { setAuthStatus } from "../../feature/authSlice";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -14,6 +16,12 @@ function NavBar() {
   const handlePopupClose = () => {
     setIsPopupOpen(false);
   };
+
+  const currentUser = authService.getCurrentUser(); 
+  if(currentUser?.uid){
+    dispatch(setAuthStatus(true));
+  }
+  
 
   return (
     <>
