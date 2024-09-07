@@ -5,14 +5,15 @@ import { motion } from "framer-motion";
 import Features from "../components/features-section/Features";
 import Maqsad from "../components/how-it-works/Maqsad";
 import Marquee from "../components/marquee/Marquee";
-
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const images = [
-    "https://ik.imagekit.io/luxswipe/version-2.0/denim-jacket?updatedAt=1711687394315",
-    "https://ik.imagekit.io/luxswipe/version-2.0/girl-with-hands-on-face?updatedAt=1711687565766",
-    "https://ik.imagekit.io/luxswipe/version-2.0/girl-with-culry-hairs?updatedAt=1711687653267",
+    "https://ik.imagekit.io/luxswipe/version-2.0/creator.jpeg?updatedAt=1725657945130",
+    "https://ik.imagekit.io/luxswipe/version-2.0/man-in-black.jpeg?updatedAt=1725657945981",
+    "https://ik.imagekit.io/luxswipe/version-2.0/she-creator.jpeg?updatedAt=1725658368289",
   ];
+  const navigate = useNavigate();
 
   return (
     <>
@@ -33,11 +34,16 @@ function Home() {
           className="z-50 flex flex-col justify-center items-center"
         >
           <motion.p className="font-kalnia font-normal text-2xl md:text-5xl text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 py-4">
-            Empowering Fashion Influencers <br /> To Showcase Their Style
+            "Link In Bio" <br />Microsite For Insta Creators
           </motion.p>
+          <button onClick={() => navigate("/auth/signup")} className="px-4 py-2 backdrop-blur-sm border bg-mystic/10 border-pink-400/20 text-white mx-auto text-center rounded-full relative mt-4">
+            <span>Get Started →</span>
+            <div className="absolute inset-x-0 font-poppins h-px -bottom-px bg-gradient-to-r w-3/4 mx-auto from-transparent via-pink-500 to-transparent" />
+          </button>
           <div className="absolute bottom-0 mb-14">
             <SwipeIndicator />
           </div>
+          
         </motion.div>
       </ImagesSlider>
 

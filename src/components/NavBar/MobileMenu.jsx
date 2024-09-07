@@ -4,10 +4,13 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import UserProfilePopup from "../ui/UserProfilePopup";
 import LogoutPopup from "../ui/LogoutPopup";
+import authService from "../../services/firebase";
+import { setAuthStatus } from "../../feature/authSlice";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLogoutPopupOpen, setIsLogoutPopupOpen] = useState(false);
+  const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.auth.authStatus);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -47,6 +50,11 @@ const MobileMenu = () => {
       </NavLink>
     </motion.div>
   );
+
+  const currentUser = authService.getCurrentUser(); 
+  if(currentUser?.uid){
+    dispatch(setAuthStatus(true));
+  }
 
   return (
     <>
