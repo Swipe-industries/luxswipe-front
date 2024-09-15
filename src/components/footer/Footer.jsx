@@ -16,93 +16,82 @@ function Footer() {
     <>
       <div
         id="footer"
-        className={(`${username ? "hidden" : null} flex flex-col bg-mystic shadow-sm justify-center items-center w-full md:h-auto`)}
+        className={(`${username ? "hidden" : null} flex flex-col bg-mystic shadow-sm items-center w-full md:h-auto`)}
       >
-        
-        <div className="mt-auto flex pt-10">
-          <div id="logo" className="mr-10 md:mr-0">
-            <img className="w-20" src={logo} alt="company logo" />
-          </div>
 
-          <div id="about" className="mb-10 md:mx-10">
-            <p className="text-xs font-poppins font-medium text-base-2 mb-1">About</p>
+<div className="flex   flex-row-reverse lg:flex-col " >
+<div className="mt-auto flex flex-col md:flex-row pt-10 justify-between">
+  
+  <div id="about" className="mb-10 ml-12 md:mr-0 space-y-2">
+    <p className="text-xs font-poppins font-medium text-base-2 mb-1">Contact Us</p>
+    <div className="flex items-center ">
+      <img className="scale-125 space-y-3" src={mail} alt="mail logo svg" />
+      <p className="font-poppins text-sm text-base-1 ml-2">
+        hello@luxswipe.in
+      </p>
+    </div>
+    <div className="flex items-center">
+      <img className="scale-125" src={location} alt="location pin logo" />
+      <p className="font-poppins text-sm text-base-1 ml-2">
+        India
+      </p>
+    </div>
+    <div className="flex items-center">
+      <img className="scale-125" src={building} alt="building logo" />
+      <p className="font-poppins text-sm text-base-1 ml-2">
+        ONE Corp.
+      </p>
+    </div>
 
-            <div className="flex items-center">
-              <img className="scale-125" src={building} alt="buildings logo" />
-              <p className="font-poppins text-sm text-base-1 ml-2">
-                Swipe Industries
-              </p>
-            </div>
 
-            <div className="flex items-center">
-              <img
-                className="scale-125"
-                src={location}
-                alt="location pin logo"
-              />
-              <p className="font-poppins text-sm text-base-1 ml-2">
-                Pbt By-Pass Road, MJPRU
-                <br />
-                Bareilly, 243006, Uttar Pradesh
-              </p>
-            </div>
-          </div>
+  </div>
 
-          <div id="contacts" className="mb-5 hidden md:block">
-            <p className="text-xs font-poppins font-medium text-base-2 mb-1">Contacts</p>
+  <div id="contacts" className="mb-5 hidden mr-64 md:block">
+    <p className="text-xs font-poppins  font-medium text-base-2 mb-1 lg:ml-0">Follow Us On</p>
+    <div className="flex items-center">
+      <img className="scale-125" src={linkedin} alt="LinkedIn logo" />
+      <p className="font-poppins text-sm text-base-1 ml-2 my-1">
+        LinkedIn
+      </p>
+    </div>
+    <div className="flex items-center">
+      <img className="scale-125" src={instagram} alt="Instagram logo" />
+      <p className="font-poppins text-sm text-base-1 ml-2 my-1">
+        Instagram
+      </p>
+    </div>
+    <div className="flex items-center">
+      <img className="scale-125" src={youtube} alt="YouTube logo" />
+      <p className="font-poppins text-sm text-base-1 ml-2 my-1">
+        YouTube
+      </p>
+    </div>
+  </div>
+</div>
 
-            {/* <div className="flex items-center">
-              <img className="scale-125" src={contact} alt="contact logo svg" />
-              <p className="font-poppins text-sm text-base-1 ml-2">
-                Contact us
-              </p>
-            </div> */}
+<div className="lg:border-b-1 lg:border-black mt-auto flex flex-col md:flex-row pt-10 lg:space-x-80">
+  <div id="about" className="flex flex-col md:flex-row mb-3 md:mx-10 space-x-0 md:space-x-96">
+    <div className="block items-center">
+      <img className="w-20 justify-center " src={logo} alt="mail logo svg" />
+      <p className="mt-3 w-20 font-kalnia m-auto text-center">LuxSwipe</p>
+    </div>
+  </div>
 
-            <div className="flex items-center">
-              <img className="scale-125" src={mail} alt="mail logo svg" />
-              <p className="font-poppins text-sm text-base-1 ml-2 my-1">
-                hello@luxswipe.in
-              </p>
-            </div>
+  <div id="contacts"  className="mb-2 hidden md:block">
+    <p className="text-2xl font-kalnia font-medium text-base-2">
+      Want to manage your links? <br />
+      LuxSwipe is all you need. <br />
+      Sign Up Now!
+    </p>
+  </div>
+</div>
+</div>
 
-            {/* <div className="flex items-center">
-              <img className="scale-125" src={phone} alt="phone logo svg" />
-              <p className="font-poppins py-2 text-sm text-base-1 ml-2">
-                +91 80575 66303
-              </p>
-            </div> */}
 
-            <div className="flex items-center my-2">
-              <Link to="https://www.linkedin.com/company/luxswipe/?viewAsMember=true">
-                {" "}
-                <img
-                  className="hover:scale-110 scale-125"
-                  src={linkedin}
-                  alt="LinkedIn Logo"
-                />
-              </Link>
-              <Link to="https://www.instagram.com/lux_swipe/">
-                {" "}
-                <img
-                  className="px-3 hover:scale-110 scale-125"
-                  src={instagram}
-                  alt="Instagram logo"
-                />
-              </Link>
-              <Link to="https://www.youtube.com/channel/UCpP2x2FLcrkOC4vcQVml-ZA">
-                {" "}
-                <img
-                  className="hover:scale-110 scale-125 w-5"
-                  src={youtube}
-                  alt="YouTube Logo"
-                />
-              </Link>
-            </div>
-          </div>
-        </div>
+
         <div className="flex mx-auto text-xs font-medium md:text-sm mt-6 mb-6 font-poppins">
           <span>
-            © 2024 Swipe Industries Private Limited, All Rights Reserved
+            © {new Date().getFullYear()} ONE Corp. Private Limited, All Right Reserved
           </span>
         </div>
       </div>
