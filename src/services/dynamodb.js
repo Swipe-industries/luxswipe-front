@@ -94,10 +94,28 @@ class DynamoDB {
       const response = await axios.patch(
         `${baseURL}/users/updateuser/${username}`,
         newData,
-        { 
-          headers: { 
-            "Content-Type": "application/json" 
-          } 
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return error.code;
+    }
+  }
+
+  async deleteLink(username, linkID) {
+    try {
+      const response = await axios.delete(
+        `${baseURL}/links/deletelink/${linkID}`,
+        {
+          data: {username},
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
       return response.data;

@@ -26,7 +26,7 @@ const SuccessPopup = ({ isOpen, onClose }) => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -50 }}
           transition={{ duration: 0.3 }}
-          className="fixed top-0 left-0 right-0 z-50 p-4"
+          className="fixed top-0 left-0 right-0 z-50 p-4 mt-12"
         >
           <div className="bg-green-100 bg-opacity-10 backdrop-blur-md shadow-lg text-green-500 rounded-lg px-5 py-3 max-w-xl mx-auto">
             <div className="flex items-center justify-between">
