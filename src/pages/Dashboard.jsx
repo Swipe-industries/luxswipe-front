@@ -51,7 +51,7 @@ const Dashboard = () => {
 
             const currentUser = authService.getCurrentUser(); //fetching currently singed in user from local storage
 
-            // console.log(currentUsers);
+            // console.log(currentUser);
 
             if (currentUser) {
               dispatch(setAuthStatus(true));

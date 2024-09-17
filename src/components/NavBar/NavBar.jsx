@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Button, Avatar } from "@nextui-org/react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
@@ -17,15 +17,14 @@ function NavBar() {
     setIsPopupOpen(false);
   };
 
-  const currentUser = authService.getCurrentUser(); 
-  if(currentUser?.uid){
+  const loggedInUser = authService.getAwsUser();
+  if (loggedInUser?.uid) {
     dispatch(setAuthStatus(true));
   }
-  
 
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full flex items-center justify-between px-4 py-2 md:px-20 text-white bg-black">
+      <nav className="sticky top-0 z-40 w-full flex items-center justify-between px-4 py-2 md:px-20 text-white bg-black">
         {/* Left side - Company name */}
         <div className="flex items-center gap-2">
           <MobileMenu />
@@ -79,11 +78,8 @@ function NavBar() {
         </div>
         {authStatus ? (
           <div className="hidden md:flex">
-            <button
-              onClick={() => setIsPopupOpen(true)}
-              
-            >
-              <Avatar src="" alt=""/>
+            <button onClick={() => setIsPopupOpen(true)}>
+              <Avatar src={loggedInUser?.avatarUrl} alt="user avatar" />
             </button>
             <UserProfilePopup
               isOpen={isPopupOpen}
