@@ -1,4 +1,3 @@
-# luxswipe-front
 # luxswipe.in
 
 Open source link in bio tool. 
