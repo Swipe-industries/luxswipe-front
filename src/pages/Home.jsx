@@ -3,6 +3,7 @@ import { ImagesSlider } from "../components/hero-section/ImagesSlider";
 import SwipeIndicator from "../components/hero-section/SwipeIndicator";
 import { motion } from "framer-motion";
 import Features from "../components/features-section/Features";
+import Mockup from "../components/mockup-section/Mockup";
 import Maqsad from "../components/how-it-works/Maqsad";
 import Marquee from "../components/marquee/Marquee";
 import { useNavigate } from "react-router-dom";
@@ -50,6 +51,11 @@ function Home() {
       {/* Feature Section */}
       <div>
         <Features />
+      </div>
+
+      {/* Mockup Section */}
+      <div>
+        <Mockup />
       </div>
 
       {/* How it works section */}

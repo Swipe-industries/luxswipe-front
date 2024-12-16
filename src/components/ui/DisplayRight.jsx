@@ -6,7 +6,7 @@ function DisplayRight({ headline, content, imgUrl, color }) {
   return (
     <>
       <div
-        className={`h-auto relative border border-mystic rounded-2xl p-10 md:mx-36 mx-5 mt-20 mb-5 bg-${
+        className={`h-auto relative border border-mystic rounded-2xl shadow-rose-900/40 shadow-xl p-10 md:mx-36 mx-5 mt-20 mb-5 bg-${
           color ? color : null
         }/5 backdrop-blur-[1px]`}
       >

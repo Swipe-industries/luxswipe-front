@@ -91,7 +91,7 @@ const Dashboard = () => {
         <>
           <ProfileSection isUser={isUser} userData={userData} />
           {(linkData.length > 0 || isUser) && <Links isUser={isUser} userData={userData} linkDataProp={linkData} />}
-          {postData.length > 0 && <Nav />}
+          {/* { <Nav />} */}
         </>
       )}
       {!isLoading && (!userExists || !userData) && <Error404 />}
